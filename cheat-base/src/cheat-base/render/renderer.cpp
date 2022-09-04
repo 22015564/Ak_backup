@@ -1,5 +1,6 @@
 #include <pch.h>
 #include "renderer.h"
+#include "ziti.h"
 
 #include <backends/imgui_impl_dx11.h>
 #pragma comment(lib, "dxgi")
@@ -142,19 +143,9 @@ namespace renderer
 
 	static void LoadCustomFont()
 	{
-		if (_customFontData.data == nullptr)
-			return;
-
-		for (int i = 0; i < _fontsCount; i++)
-		{
-			ImGuiIO& io = ImGui::GetIO();
-			auto newFont = io.Fonts->AddFontFromMemoryTTF(_customFontData.data, _customFontData.size, static_cast<float>((i + 1) * _fontSizeStep));
-			if (newFont == nullptr)
-				return;
-
-			_fonts[i] = newFont;
-		}
-		_isCustomFontLoaded = true;
+		ImGuiIO& io = ImGui::GetIO();
+		//ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\msyh.ttc", 18.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
+		ImFont* font = io.Fonts->AddFontFromMemoryTTF((void*)ziti_data, ziti_size, 15.0f, NULL, io.Fonts->GetGlyphRangesChineseFull());
 	}
 
 	static void SetupImGuiStyle();
