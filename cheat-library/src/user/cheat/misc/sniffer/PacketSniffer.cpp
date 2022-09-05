@@ -8,12 +8,12 @@
 #include <fstream>
 #include <helpers.h>
 
-namespace cheat::feature 
+namespace cheat::feature
 {
 	PacketSniffer::PacketSniffer() : Feature(),
-		NF(f_CaptureEnabled, "Capturing", "PacketSniffer", false),
-		NF(f_ManipulationEnabled, "Manipulation", "PacketSniffer", false),
-		NF(f_PipeName, "Pipe name", "PacketSniffer", "genshin_packet_pipe")
+		NF(f_CaptureEnabled, u8"抓包", "PacketSniffer", false),
+		NF(f_ManipulationEnabled, u8"操纵", "PacketSniffer", false),
+		NF(f_PipeName, u8"通道名称", "PacketSniffer", "genshin_packet_pipe")
 
 	{
 		client.Connect(f_PipeName.value());
@@ -24,18 +24,18 @@ namespace cheat::feature
 
 	const FeatureGUIInfo& PacketSniffer::GetGUIInfo() const
 	{
-		static const FeatureGUIInfo info{ "Packet Sniffer", "Settings", true };
+		static const FeatureGUIInfo info{ u8"数据包嗅探器", u8"设置", true };
 		return info;
 	}
 
 	void PacketSniffer::DrawMain()
 	{
-		ImGui::Text("Dev: for working needs server for named pipe with specified name.\nCheck 'packet-handler' project like example.");
-		ConfigWidget(f_PipeName, "Pipe name for connecting. Changes will apply after next game launch.");
-		ConfigWidget(f_CaptureEnabled, "Enable capturing of packet info and sending to pipe, if it exists.");
-		ConfigWidget(f_ManipulationEnabled, "Enable blocking and modifying packets by sniffer, can cause network lags.");
+		ImGui::Text(u8"开发人员：用于指定名称的命名管道的工作需求服务器.\n检查“数据包处理程序”项目，如示例所示.");
+		ConfigWidget(f_PipeName, u8"用于连接的通道名称. 更改将在下一次游戏启动后应用.");
+		ConfigWidget(f_CaptureEnabled, u8"允许捕获数据包信息并发送到通道, 如果存在.");
+		ConfigWidget(f_ManipulationEnabled, u8"通过嗅探器启用阻止和修改数据包, 可能导致网络延迟.");
 	}
-	
+
 	PacketSniffer& PacketSniffer::GetInstance()
 	{
 		static PacketSniffer instance;
@@ -72,7 +72,7 @@ namespace cheat::feature
 
 			char* ptr_message_content = ptr_head_content + modify_data->head.size();
 			memcpy_s(ptr_message_content, message_size, modify_data->content.data(), message_size);
-			
+
 			util::WriteMapped(ptr_message_content, message_size, static_cast<uint16_t>(0x89AB));
 
 			EncryptXor(data, data_size);
@@ -139,7 +139,7 @@ namespace cheat::feature
 		// * Magic word (0x89AB) [2 bytes]
 
 		// Header size - 12 bytes
-		
+
 		// Decrypting packetData
 		auto data = new char[length];
 		memcpy_s(data, length, encryptedData, length);

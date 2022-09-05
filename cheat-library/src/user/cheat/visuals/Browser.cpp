@@ -12,9 +12,9 @@ namespace cheat::feature
     static std::string f_URL;
 
     Browser::Browser() : Feature(),
-        NFEX(f_Enabled, "Browser", "Browser", "Visuals", false, false),
-        NF(f_planeWidth, "Browser", "Visuals", 1.0f),
-        NF(f_planeHeight, "Browser", "Visuals", 1.0f),
+        NFEX(f_Enabled, u8"ä¯ÀÀÆ÷", "Browser", "Visuals", false, false),
+        NF(f_planeWidth, u8"ä¯ÀÀÆ÷", "Visuals", 1.0f),
+        NF(f_planeHeight, u8"ä¯ÀÀÆ÷", "Visuals", 1.0f),
         toBeUpdate(), nextUpdate(0)
     {
         events::GameUpdateEvent += MY_METHOD_HANDLER(Browser::OnGameUpdate);
@@ -22,16 +22,16 @@ namespace cheat::feature
 
     const FeatureGUIInfo& Browser::GetGUIInfo() const
     {
-        static const FeatureGUIInfo info{ "Browser", "Visuals", false };
+        static const FeatureGUIInfo info{ u8"ä¯ÀÀÆ÷", u8"Í¼ÏñäÖÈ¾", false };
         return info;
     }
 
     void Browser::DrawMain()
     {
-        ConfigWidget(f_Enabled, "Create in-game Browser");
+        ConfigWidget(f_Enabled, u8"´´½¨ÓÎÏ·ÄÚä¯ÀÀÆ÷");
         ImGui::InputText("URL", &f_URL);
-        ConfigWidget("Browser width", f_planeWidth, 0.1f, 0.5f, 20.0f);
-        ConfigWidget("Browser height", f_planeHeight, 0.1f, 0.5f, 20.0f);
+        ConfigWidget(u8"ä¯ÀÀÆ÷¿í¶È", f_planeWidth, 0.1f, 0.5f, 20.0f);
+        ConfigWidget(u8"ä¯ÀÀÆ÷³¤¶È", f_planeHeight, 0.1f, 0.5f, 20.0f);
     }
 
     bool Browser::NeedStatusDraw() const
@@ -41,7 +41,7 @@ namespace cheat::feature
 
     void Browser::DrawStatus()
     {
-        ImGui::Text("Browser");
+        ImGui::Text(u8"ä¯ÀÀÆ÷");
     }
 
     Browser& Browser::GetInstance()

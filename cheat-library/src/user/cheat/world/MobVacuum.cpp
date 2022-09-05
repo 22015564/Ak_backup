@@ -9,21 +9,21 @@
 namespace cheat::feature 
 {
     MobVacuum::MobVacuum() : Feature(),
-        NF(f_Enabled,        "Mob vacuum", "MobVacuum", false),
-        NF(f_IncludeMonsters, "Include Monsters", "MobVacuum", true),
-        NF(f_MonsterCommon, "Common", "MobVacuum", true),
-        NF(f_MonsterElites, "Elite", "MobVacuum", true),
+        NF(f_Enabled,        u8"吸怪", "MobVacuum", false),
+        NF(f_IncludeMonsters, u8"包括怪物", "MobVacuum", true),
+        NF(f_MonsterCommon, u8"普通怪", "MobVacuum", true),
+        NF(f_MonsterElites, u8"精英怪", "MobVacuum", true),
         NF(f_MonsterBosses, "Boss", "MobVacuum", true),
-        NF(f_IncludeAnimals, "Include Animals", "MobVacuum", true),
-        NF(f_AnimalDrop, "Droppers", "MobVacuum", true),
-        NF(f_AnimalPickUp, "Pick-ups", "MobVacuum", true),
+        NF(f_IncludeAnimals, u8"包括动物", "MobVacuum", true),
+        NF(f_AnimalDrop, u8"可攻击动物", "MobVacuum", true),
+        NF(f_AnimalPickUp, u8"直接拾取动物", "MobVacuum", true),
         NF(f_AnimalNPC, "NPCs", "MobVacuum", true),
-        NF(f_Speed,      "Speed",         "MobVacuum", 2.5f),
-        NF(f_Distance,   "Distance",      "MobVacuum", 1.5f),
-        NF(f_Radius,     "Radius",        "MobVacuum", 10.0f),
-        NF(f_OnlyTarget, "Only targeted", "MobVacuum", true),
-        NF(f_Instantly,  "Instantly",     "MobVacuum", false),
-        NF(f_SetCollider, "SetCollider", "MobVacuum", false)
+        NF(f_Speed,      u8"速度",         "MobVacuum", 2.5f),
+        NF(f_Distance,   u8"距离",      "MobVacuum", 1.5f),
+        NF(f_Radius,     u8"半径",        "MobVacuum", 10.0f),
+        NF(f_OnlyTarget, u8"只针对", "MobVacuum", true),
+        NF(f_Instantly,  u8"立即",     "MobVacuum", false),
+        NF(f_SetCollider, u8"撞击体积", "MobVacuum", false)
     {
         events::GameUpdateEvent += MY_METHOD_HANDLER(MobVacuum::OnGameUpdate);
         events::MoveSyncEvent += MY_METHOD_HANDLER(MobVacuum::OnMoveSync);
@@ -31,43 +31,43 @@ namespace cheat::feature
 
     const FeatureGUIInfo& MobVacuum::GetGUIInfo() const
     {
-        static const FeatureGUIInfo info{ "Mob Vacuum", "World", true };
+        static const FeatureGUIInfo info{ u8"吸怪", u8"世界", true };
         return info;
     }
 
     void MobVacuum::DrawMain()
     {
-        ConfigWidget("Enabled", f_Enabled, "Enables mob vacuum.\n" \
-            "Mobs within the specified radius will move\nto a specified distance in front of the player.");
+        ConfigWidget(u8"开启", f_Enabled, u8"开启吸怪功能.\n" \
+            u8"将吸取指定范围内的怪物\n到玩家前方的指定距离.");
 
         bool filtersChanged = false;
-        ImGui::BeginGroupPanel("Monsters");
+        ImGui::BeginGroupPanel(u8"怪物");
         {
-            filtersChanged |= ConfigWidget(f_IncludeMonsters, "Include monsters in vacuum.");
-            filtersChanged |= ConfigWidget(f_MonsterCommon, "Common enemies."); ImGui::SameLine();
-            filtersChanged |= ConfigWidget(f_MonsterElites, "Elite enemies."); ImGui::SameLine();
-            filtersChanged |= ConfigWidget(f_MonsterBosses, "World and Trounce boss enemies.");
+            filtersChanged |= ConfigWidget(f_IncludeMonsters, u8"包括怪物.");
+            filtersChanged |= ConfigWidget(f_MonsterCommon, u8"普通怪."); ImGui::SameLine();
+            filtersChanged |= ConfigWidget(f_MonsterElites, u8"精英怪."); ImGui::SameLine();
+            filtersChanged |= ConfigWidget(f_MonsterBosses, u8"世界Boss类.");
         }
         ImGui::EndGroupPanel();
         
-        ImGui::BeginGroupPanel("Animals");
+        ImGui::BeginGroupPanel(u8"动物");
         {
-            filtersChanged |= ConfigWidget(f_IncludeAnimals, "Include animals in vacuum.");
-            filtersChanged |= ConfigWidget(f_AnimalDrop, "Animals you need to kill before collecting."); ImGui::SameLine();
-            filtersChanged |= ConfigWidget(f_AnimalPickUp, "Animals you can immediately collect."); ImGui::SameLine();
-            filtersChanged |= ConfigWidget(f_AnimalNPC, "Animals without mechanics.");
+            filtersChanged |= ConfigWidget(f_IncludeAnimals, u8"包括怪物.");
+            filtersChanged |= ConfigWidget(f_AnimalDrop, u8"收集前需要杀死的动物."); ImGui::SameLine();
+            filtersChanged |= ConfigWidget(f_AnimalPickUp, u8"可以立即收集的动物."); ImGui::SameLine();
+            filtersChanged |= ConfigWidget(f_AnimalNPC, u8"NPC就是NPC啦.");
         }
         ImGui::EndGroupPanel();
 
         if (filtersChanged)
             UpdateFilters();
 
-    	ConfigWidget("Instant Vacuum", f_Instantly, "Vacuum entities instantly.");
-        ConfigWidget("Only Hostile/Aggro", f_OnlyTarget, "If enabled, vacuum will only affect monsters targeting you. Will not affect animals.");
-        ConfigWidget("Remove Collider", f_SetCollider, "If enabled, monsters won't be able to push you despite the distance or size");
-        ConfigWidget("Speed", f_Speed, 0.1f, 1.0f, 15.0f, "If 'Instant Vacuum' is not checked, mob will be vacuumed at the specified speed.");
-        ConfigWidget("Radius (m)", f_Radius, 0.1f, 5.0f, 150.0f, "Radius of vacuum.");
-        ConfigWidget("Distance (m)", f_Distance, 0.1f, 0.5f, 10.0f, "Distance between the player and the monster.");
+    	ConfigWidget(u8"瞬间吸取", f_Instantly, u8"瞬间吸取怪物.");
+        ConfigWidget(u8"仅敌对/仇恨", f_OnlyTarget, u8"如果启用，吸怪将只影响以你为目标的怪物.不会影响动物.");
+        ConfigWidget(u8"移除碰撞体积", f_SetCollider, u8"如果启用，将无视怪物的碰撞体积，无论距离或大小");
+        ConfigWidget(u8"速度", f_Speed, 0.1f, 1.0f, 15.0f, u8"如果未选中“瞬间吸取”，则怪物将以指定速度吸取.");
+        ConfigWidget(u8"半径 (米)", f_Radius, 0.1f, 5.0f, 150.0f, u8"吸取半径.");
+        ConfigWidget(u8"距离 (米)", f_Distance, 0.1f, 0.5f, 10.0f, u8"玩家和怪物之间的距离.");
     }
 
     bool MobVacuum::NeedStatusDraw() const
@@ -77,13 +77,13 @@ namespace cheat::feature
 
     void MobVacuum::DrawStatus() 
     { 
-        ImGui::Text("Vacuum [%s]\n[%s|%.01fm|%.01fm|%s|%s]",
-            f_IncludeMonsters && f_IncludeAnimals ? "All" : f_IncludeMonsters ? "Monsters" : f_IncludeAnimals ? "Animals" : "None",
-            f_Instantly ? "Instant" : fmt::format("Normal|{:.1f}", f_Speed.value()).c_str(),
+        ImGui::Text(u8"吸取 [%s]\n[%s|%.01fm|%.01fm|%s]",
+            f_IncludeMonsters && f_IncludeAnimals ? u8"吸取" : f_IncludeMonsters ? u8"怪物" : f_IncludeAnimals ? u8"动物" : u8"无",
+            f_Instantly ? u8"瞬间" : fmt::format(u8"普通|{:.1f}", f_Speed.value()).c_str(),
             f_Radius.value(),
             f_Distance.value(),
-            f_OnlyTarget ? "Aggro" : "All",
-            f_SetCollider ? "RC" : "");
+            f_OnlyTarget ? u8"敌对" : u8"所有",
+            f_SetCollider ? u8"无碰撞" : "");
     }
 
     MobVacuum& MobVacuum::GetInstance()

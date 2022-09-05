@@ -13,22 +13,22 @@ namespace cheat::feature
 	app::Vector3 zero;
 
 	NoClip::NoClip() : Feature(),
-		NF(f_Enabled,			"No clip",				"NoClip", false),
-		NF(f_NoAnimation,		"No Animation",			"NoClip", true),
-		NF(f_UseCustomKeys,		"Use Custom Hotkeys",	"NoClip", false),
-		NF(f_ForwardKey,		"Forward HotKey",		"NoClip", Hotkey(ImGuiKey_W)),
-		NF(f_LeftKey,			"Left HotKey",			"NoClip", Hotkey(ImGuiKey_A)),
-		NF(f_BackKey,			"Back HotKey",			"NoClip", Hotkey(ImGuiKey_S)),
-		NF(f_RightKey,			"Right HotKey",			"NoClip", Hotkey(ImGuiKey_D)),
-		NF(f_AscendKey,			"Ascend HotKey",		"NoClip", Hotkey(ImGuiKey_Space)),
-		NF(f_DescendKey,		"Descend HotKey",		"NoClip", Hotkey(ImGuiKey_ModShift)),
-		NF(f_AltSpeedKey,		"Alt Speed Hotkey",		"NoClip", Hotkey(ImGuiKey_ModCtrl)),
-		NF(f_Speed,				"Speed",				"NoClip", 5.5f),
-		NF(f_CameraRelative,	"Relative to camera",	"NoClip", true),
-		NF(f_VelocityMode,		"Velocity mode",		"NoClip", false),
-		NF(f_FreeflightMode,	"Freeflight mode",		"NoClip", false),
-		NF(f_AltSpeedEnabled,	"Alt speed enabled",	"NoClip", false),
-		NF(f_AltSpeed,			"Alt speed",			"NoClip", 1.0f)
+		NF(f_Enabled, u8"自由移动", "NoClip", false),
+		NF(f_NoAnimation, u8"无动画", "NoClip", true),
+		NF(f_UseCustomKeys, "Use Custom Hotkeys", "NoClip", false),
+		NF(f_ForwardKey, "Forward HotKey", "NoClip", Hotkey(ImGuiKey_W)),
+		NF(f_LeftKey, "Left HotKey", "NoClip", Hotkey(ImGuiKey_A)),
+		NF(f_BackKey, "Back HotKey", "NoClip", Hotkey(ImGuiKey_S)),
+		NF(f_RightKey, "Right HotKey", "NoClip", Hotkey(ImGuiKey_D)),
+		NF(f_AscendKey, "Ascend HotKey", "NoClip", Hotkey(ImGuiKey_Space)),
+		NF(f_DescendKey, "Descend HotKey", "NoClip", Hotkey(ImGuiKey_ModShift)),
+		NF(f_AltSpeedKey, "Alt Speed Hotkey", "NoClip", Hotkey(ImGuiKey_ModCtrl)),
+		NF(f_Speed, "Speed", "NoClip", 5.5f),
+		NF(f_CameraRelative, "Relative to camera", "NoClip", true),
+		NF(f_VelocityMode, u8"速度模式", "NoClip", false),
+		NF(f_FreeflightMode, u8"自由飞行模式", "NoClip", false),
+		NF(f_AltSpeedEnabled, "Alt speed enabled", "NoClip", false),
+		NF(f_AltSpeed, "Alt speed", "NoClip", 1.0f)
 
 	{
 		HookManager::install(app::MoleMole_HumanoidMoveFSM_LateTick, HumanoidMoveFSM_LateTick_Hook);
@@ -39,47 +39,47 @@ namespace cheat::feature
 
 	const FeatureGUIInfo& NoClip::GetGUIInfo() const
 	{
-		static const FeatureGUIInfo info{ "No-Clip", "Player", true };
+		static const FeatureGUIInfo info{ u8"穿墙移动", u8"人物", true };
 		return info;
 	}
 
 	void NoClip::DrawMain()
 	{
-		ConfigWidget("Enabled", f_Enabled, "Enables no-clip (fast speed + no collision).\n" \
-			"To move, use WASD, Space (go up), and Shift (go down), or customize your own keys.");
+		ConfigWidget(u8"开启", f_Enabled, u8"开启自由移动 (快速 + 无碰撞).\n" \
+			u8"移动使用 WASD, 空格 (向下), Shift键 (向下), 或你自定义的键.");
 
-		ConfigWidget("No Animation", f_NoAnimation, "Disables player animations.");
+		ConfigWidget(u8"关闭动作", f_NoAnimation, u8"禁用角色的动作.");
 
-		ConfigWidget("Speed", f_Speed, 0.1f, 2.0f, 100.0f,
-			"No-clip move speed.\n" \
-			"Not recommended setting above 5.0.");
+		ConfigWidget(u8"速度", f_Speed, 0.1f, 2.0f, 100.0f,
+			u8"自由移动速度.\n" \
+			u8"不建议设置为高于5.0.");
 
-		ConfigWidget("Camera-relative movement", f_CameraRelative,
-			"Move relative to camera view instead of avatar view/direction.");
+		ConfigWidget(u8"摄像机相对运动", f_CameraRelative,
+			u8"相对于摄像机方向而不是身体方向移动.");
 
-		ConfigWidget("Alternate No-clip", f_AltSpeedEnabled,
-			"Allows usage of alternate speed when holding down LeftCtrl key.\n" \
-			"Useful if you want to temporarily go faster/slower than the no-clip speed setting.");
+		ConfigWidget(u8"备用自由移动", f_AltSpeedEnabled,
+			u8"允许在按住左Ctrl键时使用备用速度.\n" \
+			u8"如果您想暂时快/慢于“自由移动速度”设置，则此选项非常有用.");
 
 		if (f_AltSpeedEnabled) {
-			ConfigWidget("Alt Speed", f_AltSpeed, 0.1f, 2.0f, 100.0f,
-				"Alternate no-clip move speed.\n" \
-				"Not recommended setting above 5.0.");
+			ConfigWidget(u8"速度", f_AltSpeed, 0.1f, 2.0f, 100.0f,
+				u8"自由移动的速度.\n" \
+				u8"不建议设置为高于5.0.");
 
-			ConfigWidget("Velocity mode", f_VelocityMode, "Use velocity instead of position to move.");
-			ConfigWidget("Freeflight mode", f_FreeflightMode, "Don't remove collisions");
+			ConfigWidget(u8"速度模式", f_VelocityMode, u8"使用速度而不是位置移动.");
+			ConfigWidget(u8"自由飞行模式", f_FreeflightMode, u8"不去除碰撞");
 		}
 
-		ConfigWidget("Use Custom Keys", f_UseCustomKeys, "Enable the Use of Custom HotKeys");
+		ConfigWidget(u8"使用自定义按键", f_UseCustomKeys, u8"开启使用自定义的按键");
 
 		if (f_UseCustomKeys) {
-			ConfigWidget("Forward HotKey", f_ForwardKey, "Set Forward Key");
-			ConfigWidget("Left HotKey", f_LeftKey, "Set Left Key");
-			ConfigWidget("Back HotKey", f_BackKey, "Set Back Key");
-			ConfigWidget("Right HotKey", f_RightKey, "Set Right Key");
-			ConfigWidget("Ascend HotKey", f_AscendKey, "Set Ascend Key");
-			ConfigWidget("Descend HotKey", f_DescendKey, "Set Descend Key");
-			ConfigWidget("Alt Speed Key", f_AltSpeedKey, "Set AltSpeed HotKey");
+			ConfigWidget(u8"向前", f_ForwardKey, "Set Forward Key");
+			ConfigWidget(u8"向左", f_LeftKey, "Set Left Key");
+			ConfigWidget(u8"向后", f_BackKey, "Set Back Key");
+			ConfigWidget(u8"向右", f_RightKey, "Set Right Key");
+			ConfigWidget(u8"上升", f_AscendKey, "Set Ascend Key");
+			ConfigWidget(u8"下降", f_DescendKey, "Set Descend Key");
+			ConfigWidget(u8"备用速度", f_AltSpeedKey, "Set AltSpeed HotKey");
 		}
 	}
 
@@ -90,7 +90,7 @@ namespace cheat::feature
 
 	void NoClip::DrawStatus()
 	{
-		ImGui::Text("NoClip%s[%.01f%s%|%s]",
+		ImGui::Text(u8"自由移动%s[%.01f%s%|%s]",
 			f_AltSpeedEnabled ? "+Alt " : " ",
 			f_Speed.value(),
 			f_AltSpeedEnabled ? fmt::format("|{:.1f}", f_AltSpeed.value()).c_str() : "",

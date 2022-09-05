@@ -14,17 +14,17 @@ namespace cheat::feature
         app::Component_1* Profirency = nullptr;
     }
 
-    static std::map<std::string, int> qualities{ {"Suspicious", 1}, {"Normal", 2}, {"Delicious", 3} };
+    static std::map<std::string, int> qualities{ {u8"奇怪的", 1}, {u8"普通", 2}, {u8"美味的", 3} };
 
     static void PlayerModule_RequestPlayerCook(app::MoleMole_PlayerModule* __this, uint32_t recipeId, uint32_t avatarId, uint32_t qteQuality, uint32_t count, MethodInfo* method);
     static void PlayerModule_OnPlayerCookRsp(app::MoleMole_PlayerModule* __this, app::PlayerCookRsp* rsp, MethodInfo* method);
     static void CookingQtePageContext_UpdateProficiency(app::CookingQtePageContext* __this, MethodInfo* method);
 
     AutoCook::AutoCook() : Feature(),
-        NF(f_Enabled, "Standart Cooking", "AutoCook", false),
-        NF(f_FastProficiency, "Fast Proficiency", "AutoCook", false),
-        NF(f_CountField, "Count Item", "AutoCook", 1),
-        NF(f_QualityField, "Quality", "AutoCook", "Normal")
+        NF(f_Enabled, u8"标准烹饪", u8"自动烹饪", false),
+        NF(f_FastProficiency, u8"快速熟练度", u8"自动烹饪", false),
+        NF(f_CountField, u8"烹饪数量", u8"自动烹饪", 1),
+        NF(f_QualityField, u8"烹饪质量", u8"自动烹饪", u8"普通")
     {
         HookManager::install(app::MoleMole_PlayerModule_RequestPlayerCook, PlayerModule_RequestPlayerCook);
         HookManager::install(app::MoleMole_PlayerModule_OnPlayerCookRsp, PlayerModule_OnPlayerCookRsp);
@@ -33,19 +33,19 @@ namespace cheat::feature
 
     const FeatureGUIInfo& AutoCook::GetGUIInfo() const
     {
-        static const FeatureGUIInfo info{ "AutoCook", "World", true };
+        static const FeatureGUIInfo info{ u8"自动烹饪", u8"世界", true };
         return info;
     }
 
     void AutoCook::DrawMain()
     {
-        ConfigWidget(f_Enabled, "Fast Cooking if the recipe has fast cooking open. \n" \
-            "If fast cooking is closed, you in addition need to turn on Fast Proficiency.");
-        ConfigWidget(f_FastProficiency, "Quickly prepare an unstudied recipe to the maximum possible.");
-        ConfigWidget("Count Item", f_CountField, 1, 1, 100,
-            "How much to cook at a time.\n" \
-            "(For standard mode only.)");
-        if (ImGui::BeginCombo("Cooking Quality", f_QualityField.value().c_str()))
+        ConfigWidget(f_Enabled, u8"快速烹饪：如果食谱已解锁“快速烹饪”. \n" \
+            u8"如果快速烹饪未解锁，您还需要打开快速熟练度.");
+        ConfigWidget(f_FastProficiency, u8"快速地准备一份未经研究的食谱.");
+        ConfigWidget(u8"制作数量", f_CountField, 1, 1, 100,
+            u8"一次性制作多少数量.\n" \
+            u8"(仅适用于标准烹饪.)");
+        if (ImGui::BeginCombo(u8"烹饪质量", f_QualityField.value().c_str()))
         {
             for (auto& [qualityName, quality] : qualities)
             {
@@ -68,9 +68,9 @@ namespace cheat::feature
     void AutoCook::DrawStatus()
     {
         if (f_FastProficiency)
-            ImGui::Text("Auto Cooking [Proficiency]");
+            ImGui::Text(u8"自动烹饪 [快速熟练]");
         else
-            ImGui::Text("Auto Cooking [Standart, %s]", f_QualityField.value().c_str());
+            ImGui::Text(u8"自动烹饪 [标准, %s]", f_QualityField.value().c_str());
     }
 
     AutoCook& AutoCook::GetInstance()

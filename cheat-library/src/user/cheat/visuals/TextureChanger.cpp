@@ -13,11 +13,11 @@ namespace cheat::feature
     }
  
     TextureChanger::TextureChanger() : Feature(),
-        NF(f_Enabled, "Texture Changer", "Visuals::TextureChanger", false),
-        NF(f_HeadPath, "Head", "Visuals::TextureChanger", false),
-        NF(f_BodyPath, "Body", "Visuals::TextureChanger", false),
-        NF(f_DressPath, "Dress", "Visuals::TextureChanger", false),
-        NF(f_GliderPath, "Glider", "Visuals::TextureChanger", false),
+        NF(f_Enabled, u8"ÎÆÀíÌæ»»", u8"Í¼ÏñäÖÈ¾::ÎÆÀíÌæ»»", false),
+        NF(f_HeadPath, u8"Í·", u8"Í¼ÏñäÖÈ¾::ÎÆÀíÌæ»»", false),
+        NF(f_BodyPath, u8"ÉíÌå", u8"Í¼ÏñäÖÈ¾::ÎÆÀíÌæ»»", false),
+        NF(f_DressPath, u8"È¹×Ó", u8"Í¼ÏñäÖÈ¾::ÎÆÀíÌæ»»", false),
+        NF(f_GliderPath, u8"»¬ÏèÒí", u8"Í¼ÏñäÖÈ¾::ÎÆÀíÌæ»»", false),
         toBeUpdate(), nextUpdate(0)
     {
         events::GameUpdateEvent += MY_METHOD_HANDLER(TextureChanger::OnGameUpdate);
@@ -25,29 +25,29 @@ namespace cheat::feature
 
     const FeatureGUIInfo& TextureChanger::GetGUIInfo() const
     {
-        static const FeatureGUIInfo info{ "TextureChanger", "Visuals", true };
+        static const FeatureGUIInfo info{ u8"ÎÆÀíÌæ»»", u8"Í¼ÏñäÖÈ¾", true };
         return info;
     }
 
     void TextureChanger::DrawMain()
     {
-        ConfigWidget(f_Enabled, "Texture Changer.");
-        ImGui::Text("Active Hero: %s", ActiveHero.c_str());
-        ImGui::Text("Active Glider: %s", ActiveGlider.c_str());
+        ConfigWidget(f_Enabled, u8"ÎÆÀíÌæ»».");
+        ImGui::Text(u8"µ±Ç°½ÇÉ«: %s", ActiveHero.c_str());
+        ImGui::Text(u8"µ±Ç°»¬ÏèÒí: %s", ActiveGlider.c_str());
  
-        ConfigWidget(f_HeadPath, "Head Texture.\n" \
-            "Example path: C:\\Head.png");
+        ConfigWidget(f_HeadPath, u8"Í·²¿ÎÆÀí.\n" \
+            u8"Â·¾¶Ê¾Àı: C:\\Head.png");
 
         ConfigWidget(f_BodyPath, "Body Texture.\n" \
-            "Example path: C:\\Body.png");
+            u8"Â·¾¶Ê¾Àı: C:\\Body.png");
 
         ConfigWidget(f_DressPath, "Dress Texture.\n" \
-            "Example path: C:\\Dress.png");
+            u8"Â·¾¶Ê¾Àı: C:\\Dress.png");
 
         ConfigWidget(f_GliderPath, "Glider Texture.\n" \
-            "Example path: C:\\Glider.png");
+            u8"Â·¾¶Ê¾Àı: C:\\Glider.png");
 
-        if (ImGui::Button("Apply"))
+        if (ImGui::Button(u8"Ó¦ÓÃ"))
             ApplyTexture = true;
     }
 
@@ -58,7 +58,7 @@ namespace cheat::feature
 
     void TextureChanger::DrawStatus()
     {
-        ImGui::Text("Texture Changer");
+        ImGui::Text(u8"ÎÆÀíÌæ»»");
     }
 
     TextureChanger& TextureChanger::GetInstance()

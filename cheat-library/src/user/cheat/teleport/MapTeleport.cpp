@@ -10,10 +10,10 @@ namespace cheat::feature
 {
 
 	MapTeleport::MapTeleport() : Feature(),
-		NF(f_Enabled, "Map teleport", "MapTeleport", false),
-		NF(f_DetectHeight, "Auto height detect", "MapTeleport", true),
-		NF(f_DefaultHeight, "Default teleport height", "MapTeleport", 300.0f),
-		NF(f_Key, "Teleport key", "MapTeleport", Hotkey('T'))
+		NF(f_Enabled, u8"地图传送", u8"地图传送", false),
+		NF(f_DetectHeight, u8"自动高度检测", u8"地图传送", true),
+		NF(f_DefaultHeight, u8"默认传送高度", u8"地图传送", 300.0f),
+		NF(f_Key, u8"传送按键", "MapTeleport", Hotkey('T'))
 	{
 		// Map touch
 		HookManager::install(app::MoleMole_InLevelMapPageContext_OnMarkClicked, InLevelMapPageContext_OnMarkClicked_Hook);
@@ -33,32 +33,32 @@ namespace cheat::feature
 
 	const FeatureGUIInfo& MapTeleport::GetGUIInfo() const
 	{
-		static const FeatureGUIInfo info{ "Map Teleport", "Teleport", true };
+		static const FeatureGUIInfo info{ u8"地图传送", u8"传送", true };
 		return info;
 	}
 
 	void MapTeleport::DrawMain()
 	{
-		ConfigWidget("Enabled",
+		ConfigWidget(u8"开启",
 			f_Enabled,
-			"Enable teleport-to-mark functionality.\n" \
-			"Usage: \n" \
-			"\t1. Open map.\n" \
-			"\t2. Hold [Teleport Key] and click with the LMB anywhere in the map.\n" \
-			"\tDone. You have been teleported to selected location.\n" \
-			"Teleport might glitch if teleporting to an extremely high location. \n" \
-			"Adjust Override Height accordingly to help avoid."
+			u8"开启地图标点传送功能.\n" \
+			u8"用法: \n" \
+			u8"\t1. 打开地图.\n" \
+			u8"\t2. 按住 [传送按键] 同时鼠标在地图上左键点击要去的地方.\n" \
+			u8"\t完成. 你已被传送到选中的地方.\n" \
+			u8"如果传送到极高的位置，传送可能会出现故障. \n" \
+			u8"相应地调整超驰高度，以帮助避免.."
 		);
 
 		if (!f_Enabled)
 			ImGui::BeginDisabled();
 
-		ConfigWidget("Override Height (m)", f_DefaultHeight, 1.0F, 200.0F, 800.0F,
-			"If teleport cannot get ground height of target location,\nit will teleport you to the height specified here.\n" \
-			"It is recommended to have this value to be at least as high as a mountain.\nOtherwise, you may fall through the ground.");
+		ConfigWidget(u8"覆盖高度 (米)", f_DefaultHeight, 1.0F, 200.0F, 800.0F,
+			u8"如果传送无法获得目标位置的地面高度,\n它会将你传送到此处指定的高度.\n" \
+			u8"建议该值至少与山一样高.\n否则，你可能会从地上摔下来.");
 
-		ConfigWidget("Teleport Key", f_Key, true,
-			"Key to hold down before clicking on target location.");
+		ConfigWidget(u8"传送按键", f_Key, true,
+			u8"按住此键并同时点击地图.");
 
 		if (!f_Enabled)
 			ImGui::EndDisabled();
@@ -181,7 +181,7 @@ namespace cheat::feature
 	{
 		if (taskInfo.currentStage != 3)
 			return originResult;
-		
+
 		auto& entityManager = game::EntityManager::instance();
 		bool needServerTrans = entityManager.avatar()->distance(taskInfo.targetPosition) > 60.0f;
 		if (needServerTrans)

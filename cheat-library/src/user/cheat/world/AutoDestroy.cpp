@@ -15,43 +15,43 @@ namespace cheat::feature
 	static void LCAbilityElement_ReduceModifierDurability_Hook(app::LCAbilityElement* __this, int32_t modifierDurabilityIndex, float reduceDurability, app::Nullable_1_Single_ deltaTime, MethodInfo* method);
 
 	AutoDestroy::AutoDestroy() : Feature(),
-		NF(f_Enabled, "Auto Destroy", "AutoDestroy", false),
-		NF(f_DestroyOres, "Destroy Ores", "AutoDestroy", false),
-		NF(f_DestroyShields, "Destroy Shields", "AutoDestroy", false),
-		NF(f_DestroyDoodads, "Destroy Doodads", "AutoDestroy", false),
-		NF(f_DestroyPlants, "Destroy Plants", "AutoDestroy", false),
-		NF(f_DestroySpecialObjects, "Destroy Special Objects", "AutoDestroy", false),
-		NF(f_DestroySpecialChests, "Destroy Special Chests", "AutoDestroy", false),
-		NF(f_Range, "Range", "AutoDestroy", 10.0f)
+		NF(f_Enabled, u8"自动破坏", u8"自动破坏", false),
+		NF(f_DestroyOres, u8"破坏矿物", u8"自动破坏", false),
+		NF(f_DestroyShields, u8"破坏盾牌", u8"自动破坏", false),
+		NF(f_DestroyDoodads, u8"破坏装饰物", u8"自动破坏", false),
+		NF(f_DestroyPlants, u8"破坏植物", u8"自动破坏", false),
+		NF(f_DestroySpecialObjects, u8"破坏特殊物品", u8"自动破坏", false),
+		NF(f_DestroySpecialChests, u8"破坏特殊箱子", u8"自动破坏", false),
+		NF(f_Range, u8"范围", u8"自动破坏", 10.0f)
 	{
 		HookManager::install(app::MoleMole_LCAbilityElement_ReduceModifierDurability, LCAbilityElement_ReduceModifierDurability_Hook);
 	}
 
 	const FeatureGUIInfo& AutoDestroy::GetGUIInfo() const
 	{
-		static const FeatureGUIInfo info{ "Auto Destroy Objects", "World", true };
+		static const FeatureGUIInfo info{ u8"自动破坏物品", u8"世界", true };
 		return info;
 	}
 
 	void AutoDestroy::DrawMain()
 	{
-		ImGui::TextColored(ImColor(255, 165, 0, 255), "Note. This feature is not fully tested detection-wise.\n"
-			"Not recommended for main accounts or used with high values.");
+		ImGui::TextColored(ImColor(255, 165, 0, 255), u8"注意. 该功能并未进行全面测试.\n"
+			u8"不建议用于主帐户或开启高数值使用.");
 
-		ConfigWidget("Enabled", f_Enabled, "Instantly destroys non-living objects within range.");
+		ConfigWidget(u8"开启", f_Enabled, u8"立即摧毁射程内的物体.");
 		ImGui::Indent();
-		ConfigWidget("Ores", f_DestroyOres, "Ores and variants, e.g. electro crystals, marrows, etc.");
-		ConfigWidget("Shields", f_DestroyShields, "Abyss mage/churl/slime shields.");
-		ConfigWidget("Doodads", f_DestroyDoodads, "Barrels, boxes, vases, etc.");
-		ConfigWidget("Plants", f_DestroyPlants, "Dandelion Seeds, Sakura Bloom, etc.");
-		ConfigWidget("Special Objects", f_DestroySpecialObjects, "Destroy Ancient Rime, Large and Small Rock Piles");
+		ConfigWidget(u8"矿物", f_DestroyOres, "矿石和变体，如电晶体等.");
+		ConfigWidget(u8"盾牌", f_DestroyShields, u8"深渊法师/矮人/黏液护盾.");
+		ConfigWidget(u8"装饰物", f_DestroyDoodads, u8"桶、箱子、花瓶等.");
+		ConfigWidget(u8"植物", f_DestroyPlants, u8"蒲公英种子、樱花花等.");
+		ConfigWidget(u8"特别物品", f_DestroySpecialObjects, u8"摧毁古老的雾凇、大小岩石堆");
 		ImGui::SameLine();
-		ImGui::TextColored(ImColor(255, 165, 0, 255), "Risk Unknown!");
-		ConfigWidget("Special Chests", f_DestroySpecialChests, "Destroy Chests with Brambles, Frozen, or In Rocks");
+		ImGui::TextColored(ImColor(255, 165, 0, 255), u8"风险未知!");
+		ConfigWidget(u8"特别箱子", f_DestroySpecialChests, u8"用荆棘、冰冻或岩石破坏箱子");
 		ImGui::SameLine();
-		ImGui::TextColored(ImColor(255, 165, 0, 255), "Risk Unknown!");
+		ImGui::TextColored(ImColor(255, 165, 0, 255), u8"风险未知!");
 		ImGui::Unindent();
-		ConfigWidget("Range (m)", f_Range, 0.1f, 1.0f, 15.0f);
+		ConfigWidget(u8"范围 (m)", f_Range, 0.1f, 1.0f, 15.0f);
 	}
 
 	bool AutoDestroy::NeedStatusDraw() const
@@ -61,15 +61,15 @@ namespace cheat::feature
 
 	void AutoDestroy::DrawStatus()
 	{
-		ImGui::Text("Destroy [%.01fm%s%s%s%s%s%s%s]",
+		ImGui::Text(u8"破坏 [%.01fm%s%s%s%s%s%s%s]",
 			f_Range.value(),
 			f_DestroyOres || f_DestroyShields || f_DestroyDoodads || f_DestroyPlants || f_DestroySpecialObjects || f_DestroySpecialChests ? "|" : "",
-			f_DestroyOres ? "O" : "",
-			f_DestroyShields ? "S" : "",
-			f_DestroyDoodads ? "D" : "",
-			f_DestroyPlants ? "P" : "",
-			f_DestroySpecialObjects ? "SO" : "",
-			f_DestroySpecialChests ? "SC" : "");
+			f_DestroyOres ? u8"矿" : "",
+			f_DestroyShields ? u8"盾" : "",
+			f_DestroyDoodads ? u8"饰" : "",
+			f_DestroyPlants ? u8"植" : "",
+			f_DestroySpecialObjects ? u8"特殊" : "",
+			f_DestroySpecialChests ? u8"箱" : "");
 	}
 
 	AutoDestroy& AutoDestroy::GetInstance()

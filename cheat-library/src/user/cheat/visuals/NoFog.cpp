@@ -8,20 +8,20 @@ namespace cheat::feature
 {
     static bool _prevEnabledState = false;
     NoFog::NoFog() : Feature(),
-        NFEX(f_Enabled, "No Fog", "NoFog", "Visuals", false, false)
+        NFEX(f_Enabled, u8"去雾", "NoFog", "Visuals", false, false)
     {
         events::GameUpdateEvent += MY_METHOD_HANDLER(NoFog::OnGameUpdate);
     }
 
     const FeatureGUIInfo& NoFog::GetGUIInfo() const
     {
-        static const FeatureGUIInfo info{ "NoFog", "Visuals", false };
+        static const FeatureGUIInfo info{ u8"去雾", u8"图像渲染", false };
         return info;
     }
 
     void NoFog::DrawMain()
     {
-        ConfigWidget(f_Enabled, "Removes the fog.");
+        ConfigWidget(f_Enabled, u8"去除所有的雾.");
     }
 
     bool NoFog::NeedStatusDraw() const
@@ -31,7 +31,7 @@ namespace cheat::feature
 
     void NoFog::DrawStatus()
     {
-        ImGui::Text("NoFog");
+        ImGui::Text(u8"去雾");
     }
 
     NoFog& NoFog::GetInstance()
@@ -42,11 +42,11 @@ namespace cheat::feature
 
     void NoFog::OnGameUpdate()
     {
-		if (_prevEnabledState != f_Enabled)
-		{
-			app::RenderSettings_set_fog(!f_Enabled, nullptr);
-			_prevEnabledState = f_Enabled;
-		}
+        if (_prevEnabledState != f_Enabled)
+        {
+            app::RenderSettings_set_fog(!f_Enabled, nullptr);
+            _prevEnabledState = f_Enabled;
+        }
     }
 }
 

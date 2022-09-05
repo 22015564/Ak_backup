@@ -37,7 +37,7 @@ void Run(HMODULE* phModule)
 
 	while (GetModuleHandle("UserAssembly.dll") == nullptr)
 	{
-		LOG_DEBUG("UserAssembly.dll isn't initialized, waiting for 2 sec.");
+		LOG_DEBUG("游戏注入完后按F12切出主菜单，F11快速关闭游戏.");
 		Sleep(2000);
 	}
 

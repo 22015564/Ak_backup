@@ -7,22 +7,22 @@
 namespace cheat::feature
 {
     FPSUnlock::FPSUnlock() : Feature(),
-		NF(f_Enabled, "Fps unlock", "Visuals::FPSUnlocker", false),
-        NF(f_Fps, "FPS", "Visuals::FPSUnlocker", 240)
+        NF(f_Enabled, u8"解锁帧率", u8"图像渲染::解锁帧率", false),
+        NF(f_Fps, "FPS", u8"图像渲染::解锁帧率", 240)
     {
         events::GameUpdateEvent += MY_METHOD_HANDLER(FPSUnlock::OnGameUpdate);
     }
 
     const FeatureGUIInfo& FPSUnlock::GetGUIInfo() const
     {
-        static const FeatureGUIInfo info{ "FPSUnlock", "Visuals", false };
+        static const FeatureGUIInfo info{ u8"解锁帧率", u8"图像渲染", false };
         return info;
     }
 
     void FPSUnlock::DrawMain()
     {
         ConfigWidget("", f_Enabled); ImGui::SameLine();
-        ConfigWidget(f_Fps, 1, 30, 360, "Unlocks higher framerate.");
+        ConfigWidget(f_Fps, 1, 30, 360, u8"解锁更高的帧速率.");
     }
 
     bool FPSUnlock::NeedStatusDraw() const
@@ -32,7 +32,7 @@ namespace cheat::feature
 
     void FPSUnlock::DrawStatus()
     {
-        ImGui::Text("FPSUnlock [%d]", f_Fps.value());
+        ImGui::Text(u8"解锁帧率 [%d]", f_Fps.value());
     }
 
     FPSUnlock& FPSUnlock::GetInstance()
@@ -56,6 +56,6 @@ namespace cheat::feature
         _lastEnabledStatus = f_Enabled;
 
         if (f_Enabled)
-			app::Application_set_targetFrameRate(f_Fps, nullptr);
+            app::Application_set_targetFrameRate(f_Fps, nullptr);
     }
 }

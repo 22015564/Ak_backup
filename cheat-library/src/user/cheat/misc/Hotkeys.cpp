@@ -4,23 +4,23 @@
 #include <helpers.h>
 #include <misc/cpp/imgui_stdlib.h>
 
-namespace cheat::feature 
+namespace cheat::feature
 {
     Hotkeys::Hotkeys() : Feature() { }
 
     const FeatureGUIInfo& Hotkeys::GetGUIInfo() const
     {
-        static const FeatureGUIInfo info{ "", "Hotkeys", false };
+        static const FeatureGUIInfo info{ "", u8"¿ì½Ý¼ü", false };
         return info;
     }
 
     void Hotkeys::DrawMain()
     {
         static std::string searchBuffer;
-        ImGui::InputText("Search", &searchBuffer);
+        ImGui::InputText(u8"ËÑË÷", &searchBuffer);
 
-        ImGui::BeginChild("Hotkeys");
-        
+        ImGui::BeginChild(u8"¿ì½Ý¼ü");
+
         std::unordered_map<std::string, std::vector<config::Field<config::Toggle<Hotkey>>*>> sections;
 
         for (auto& field : config::GetFields<config::Toggle<Hotkey>>())
@@ -57,13 +57,13 @@ namespace cheat::feature
 
         for (auto& fields : multiLineSections)
         {
-	        if (ImGui::BeginGroupPanel((*fields)[0]->section().c_str(), true))
-	        {
-		        for (auto& field : *fields)
-		        {
+            if (ImGui::BeginGroupPanel((*fields)[0]->section().c_str(), true))
+            {
+                for (auto& field : *fields)
+                {
                     ConfigWidget(*field, nullptr, true);
-		        }
-	        }
+                }
+            }
             ImGui::EndGroupPanel();
         }
 

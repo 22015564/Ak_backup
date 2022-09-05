@@ -9,83 +9,83 @@
 #include <cheat/game/util.h>
 #include <cheat/game/filters.h>
 
-namespace cheat::feature 
+namespace cheat::feature
 {
 	static void BaseMoveSyncPlugin_ConvertSyncTaskToMotionInfo_Hook(app::BaseMoveSyncPlugin* __this, MethodInfo* method);
 
-    KillAura::KillAura() : Feature(),
-        NF(f_Enabled,      "Kill aura",                 "KillAura", false),
-		NF(f_DamageMode,   "Damage mode",               "Damage mode", false),
-		NF(f_PercentDamageMode, "Percent damage mode",  "Damage mode", false),
-		NF(f_InstantDeathMode,   "Instant death",       "Instant death", false),
-        NF(f_OnlyTargeted, "Only targeted",             "KillAura", true),
-        NF(f_Range,        "Range",                     "KillAura", 15.0f),
-        NF(f_AttackDelay,  "Attack delay time (in ms)", "KillAura", 100),
-        NF(f_RepeatDelay,  "Repeat delay time (in ms)", "KillAura", 1000),
-		NF(f_DamageValue, "Crash damage value", "Damage mode", 233.0f),
-		NF(f_PercentDamageTimes, "Times to kill", "Damage mode", 3)
-    { 
+	KillAura::KillAura() : Feature(),
+		NF(f_Enabled, u8"杀戮光环", "KillAura", false),
+		NF(f_DamageMode, u8"伤害模式", "Damage mode", false),
+		NF(f_PercentDamageMode, u8"百分比伤害", "Damage mode", false),
+		NF(f_InstantDeathMode, u8"瞬间死亡", "Instant death", false),
+		NF(f_OnlyTargeted, u8"仅针对", "KillAura", true),
+		NF(f_Range, u8"范围", "KillAura", 15.0f),
+		NF(f_AttackDelay, u8"攻击延迟时间 (毫秒)", "KillAura", 100),
+		NF(f_RepeatDelay, u8"重复延迟时间 (毫秒)", "KillAura", 1000),
+		NF(f_DamageValue, u8"碰撞伤害模式", "Damage mode", 233.0f),
+		NF(f_PercentDamageTimes, u8"杀死次数", "Damage mode", 3)
+	{
 		events::GameUpdateEvent += MY_METHOD_HANDLER(KillAura::OnGameUpdate);
 		HookManager::install(app::MoleMole_BaseMoveSyncPlugin_ConvertSyncTaskToMotionInfo, BaseMoveSyncPlugin_ConvertSyncTaskToMotionInfo_Hook);
 	}
 
-    const FeatureGUIInfo& KillAura::GetGUIInfo() const
-    {
-        static const FeatureGUIInfo info{ "Kill Aura", "World", true };
-        return info;
-    }
+	const FeatureGUIInfo& KillAura::GetGUIInfo() const
+	{
+		static const FeatureGUIInfo info{ u8"杀戮光环 ", u8"世界", true };
+		return info;
+	}
 
-    void KillAura::DrawMain()
-    {
-		ConfigWidget("Enable Kill Aura", f_Enabled, "Enables kill aura. Need to choose a mode to work.");
+	void KillAura::DrawMain()
+	{
+		ConfigWidget(u8"开启杀戮光环", f_Enabled, u8"开启杀戮光环. 需要选择工作模式.");
 		ImGui::SameLine();
-		ImGui::TextColored(ImColor(255, 165, 0, 255), "Choose any or both modes below.");
+		ImGui::TextColored(ImColor(255, 165, 0, 255), u8"选择以下任一或两种模式：.");
 
-		ConfigWidget("Crash Damage Mode", f_DamageMode, "Kill aura causes crash damage for monster around you.");
+		ConfigWidget(u8"碰撞伤害模式", f_DamageMode, u8"杀戮光环对你周围的怪物造成碰撞伤害.");
 		ImGui::Indent();
-		ConfigWidget("Percent mode", f_PercentDamageMode, "Crash damage with percent value.");
+		ConfigWidget(u8"百分比模式", f_PercentDamageMode, u8"具有百分比值的碰撞伤害.");
 		if (f_DamageMode)
 		{
 			if (!f_PercentDamageMode)
 			{
-				ConfigWidget("Damage Value", f_DamageValue, 1, 0, 10000000, "Crash damage value");
+				ConfigWidget(u8"伤害值", f_DamageValue, 1, 0, 10000000, u8"碰撞伤害值");
 			}
 			else
 			{
-				ConfigWidget("Kill times", f_PercentDamageTimes, 1, 1, 100, "How many times to kill.");
+				ConfigWidget(u8"杀死次数", f_PercentDamageTimes, 1, 1, 100, u8"几次攻击杀死.");
 			}
 		}
 		ImGui::Unindent();
-		ConfigWidget("Instant Death Mode", f_InstantDeathMode, "Kill aura will attempt to instagib any valid target.");
+		ConfigWidget(u8"瞬间杀死模式", f_InstantDeathMode, u8"杀戮光环尝试作用于附件所有目标.");
 		ImGui::SameLine();
-		ImGui::TextColored(ImColor(255, 165, 0, 255), "Can get buggy with bosses like PMA and Hydro Hypo.");
-		ConfigWidget("Kill Range", f_Range, 0.1f, 5.0f, 100.0f);
-		ConfigWidget("Only Hostile/Aggro", f_OnlyTargeted, "If enabled, kill aura will only affect monsters targeting/aggro towards you.");
-		ConfigWidget("Crash Attack Delay (ms)", f_AttackDelay, 1, 0, 1000, "Delay in ms before next crash damage.");
-		ConfigWidget("Crash Repeat Delay (ms)", f_RepeatDelay, 1, 100, 2000, "Delay in ms before crash damaging same monster.");
-    }
+		ImGui::TextColored(ImColor(255, 165, 0, 255), u8"可以与PMA和Hydro-Hypo等Boss一起使用.");
+		ConfigWidget(u8"杀戮范围", f_Range, 0.1f, 5.0f, 100.0f);
+		ConfigWidget(u8"仅敌对/仇恨", f_OnlyTargeted, u8"如果启用，杀戮光环将只影响瞄准/攻击你的怪物.");
+		ConfigWidget(u8"碰撞攻击延迟 (毫秒)", f_AttackDelay, 1, 0, 1000, u8"下一次碰撞伤害前的延迟（毫秒）.");
+		ConfigWidget(u8"碰撞重复延迟 (毫秒)", f_RepeatDelay, 1, 100, 2000, u8"损坏同一怪物碰撞前延迟（毫秒）.");
+	}
 
-    bool KillAura::NeedStatusDraw() const
+	bool KillAura::NeedStatusDraw() const
 	{
-        return f_Enabled;
-    }
+		return f_Enabled;
+	}
 
-    void KillAura::DrawStatus() 
-    { 
-        ImGui::Text("Kill Aura [%s%s]\n[%.01fm|%s|%dms|%dms]", 
-			f_DamageMode && f_InstantDeathMode ? "Extreme" : f_DamageMode ? "Crash" : f_InstantDeathMode ? "Instant" : "None",
-			f_DamageMode ? !f_PercentDamageMode ? "|Fixed" : fmt::format("|Rate({})", f_PercentDamageTimes.value()).c_str() : "",
+	void KillAura::DrawStatus()
+	{
+		ImGui::Text(u8"杀戮光环 [%s%s]\n[%.01fm|%s|%dms|%dms]",
+			f_DamageMode && f_InstantDeathMode ? u8"极端" : f_DamageMode ? u8"碰撞" : f_InstantDeathMode ? u8"瞬杀" : u8"无",
+			f_DamageMode ? !f_PercentDamageMode ? u8"|固伤" : fmt::format(u8"|比例({})", f_PercentDamageTimes.value()).c_str() : "",
 			f_Range.value(),
-			f_OnlyTargeted ? "Aggro" : "All",
+			f_OnlyTargeted ? u8"敌对" : u8"所有",
 			f_AttackDelay.value(),
 			f_RepeatDelay.value());
-    }
+	}
 
-    KillAura& KillAura::GetInstance()
-    {
-        static KillAura instance;
-        return instance;
-    }
+	KillAura& KillAura::GetInstance()
+	{
+		static KillAura instance;
+		return instance;
+	}
 
 	// Kill aura logic is just emulate monster fall crash, so simple but works.
 	// Note. No work on mob with shield, maybe update like auto ore destroy.
@@ -112,7 +112,7 @@ namespace cheat::feature
 
 		auto& manager = game::EntityManager::instance();
 
-		for (const auto& monster : manager.entities(game::filters::combined::Monsters))   
+		for (const auto& monster : manager.entities(game::filters::combined::Monsters))
 		{
 			auto monsterID = monster->runtimeID();
 
@@ -167,12 +167,12 @@ namespace cheat::feature
 		}
 
 		attackSet.erase(monster->runtimeID());
-		
+
 		auto combat = monster->combat();
 
 		auto crashEvt = app::MoleMole_EventHelper_Allocate_103(*app::MoleMole_EventHelper_Allocate_103__MethodInfo);
 		app::MoleMole_EvtCrash_Init(crashEvt, monster->runtimeID(), nullptr);
-		
+
 		if(!f_PercentDamageMode)
 		{
 			//Migita^Rin#1762: Fixed inaccurate damage caused by floating point precision(Maybe)

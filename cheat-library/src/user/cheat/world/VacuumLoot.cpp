@@ -9,7 +9,7 @@
 namespace cheat::feature
 {
 	VacuumLoot::VacuumLoot() : Feature(),
-		NF(f_Enabled, "Vacuum Loot", "VacuumLoot", false),
+		NF(f_Enabled, u8"吸取战利品", "VacuumLoot", false),
 		NF(f_DelayTime, "Delay time (in ms)", "VacuumLoot", 1000),
 		NF(f_Distance, "Distance", "VacuumLoot", 1.5f),
 		NF(f_MobDropRadius, "Mob Drop Radius", "VacuumLoot", 20.0f),
@@ -22,30 +22,30 @@ namespace cheat::feature
 
 	const FeatureGUIInfo& VacuumLoot::GetGUIInfo() const
 	{
-		static const FeatureGUIInfo info{ "Vacuum Loot", "World", true };
+		static const FeatureGUIInfo info{ u8"吸取战利品", u8"世界", true };
 		return info;
 	}
 
 	void VacuumLoot::DrawMain()
 	{
 
-			ConfigWidget("Enabled", f_Enabled, "Vacuum Loot drops"); ImGui::SameLine(); ImGui::SetNextItemWidth(100.0f);
-			ConfigWidget("Delay Time (ms)", f_DelayTime, 1, 0, 1000, "Delay (in ms) between loot vacuum.");
-			ConfigWidget("Radius (m)", f_Radius, 0.1f, 5.0f, 100.0f, "Radius of common loot vacuum.");
-			ConfigWidget("Mob Drop Radius (m)", f_MobDropRadius, 0.1f, 5.0f, 100.0f, "Radius of mob drop vacuum.\n"
-			"(Item Drops and Equipments)");
-			ConfigWidget("Distance (m)", f_Distance, 0.1f, 1.0f, 10.0f, "Distance between the player and the loot.\n"
-				"Values under 1.5 may be too intruding.");
-			if (ImGui::TreeNode("Loot Types"))
+		ConfigWidget(u8"开启", f_Enabled, u8"开启吸取战利品"); ImGui::SameLine(); ImGui::SetNextItemWidth(100.0f);
+		ConfigWidget(u8"延迟时间 (毫秒)", f_DelayTime, 1, 0, 1000, u8"每次吸取的间隔 (毫秒).");
+		ConfigWidget(u8"半径 (米)", f_Radius, 0.1f, 5.0f, 100.0f, u8"吸取的范围.");
+		ConfigWidget(u8"怪物摔落半径 (米)", f_MobDropRadius, 0.1f, 5.0f, 100.0f, u8"怪物摔落的范围.\n"
+			u8"(物品掉落和装备)");
+		ConfigWidget(u8"距离 (米)", f_Distance, 0.1f, 1.0f, 10.0f, u8"玩家和战利品之间的距离.\n"
+			u8"低于1.5的值可能太过分.");
+		if (ImGui::TreeNode(u8"战利品类型"))
+		{
+			for (auto& [section, filters] : m_Sections)
 			{
-				for (auto& [section, filters] : m_Sections)
-				{
-					ImGui::PushID(section.c_str());
-					DrawSection(section, filters);
-					ImGui::PopID();
-				}
-				ImGui::TreePop();
+				ImGui::PushID(section.c_str());
+				DrawSection(section, filters);
+				ImGui::PopID();
 			}
+			ImGui::TreePop();
+		}
 	}
 
 	bool VacuumLoot::NeedStatusDraw() const
@@ -55,7 +55,7 @@ namespace cheat::feature
 
 	void VacuumLoot::DrawStatus()
 	{
-		ImGui::Text("VacuumLoot\n[%dms|%.01fm|%.01fm|%.01fm]",
+		ImGui::Text(u8"吸取战利品\n[%dms|%.01fm|%.01fm|%.01fm]",
 			f_DelayTime.value(),
 			f_Radius.value(),
 			f_MobDropRadius.value(),

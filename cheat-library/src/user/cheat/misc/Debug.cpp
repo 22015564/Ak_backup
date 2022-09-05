@@ -40,7 +40,7 @@ namespace cheat::feature
 
     const FeatureGUIInfo& Debug::GetGUIInfo() const
     {
-        static const FeatureGUIInfo info{ "DebugInfo", "Debug", false };
+        static const FeatureGUIInfo info{ u8"调试信息", u8"调试", false };
         return info;
     }
 
@@ -55,8 +55,8 @@ namespace cheat::feature
     // Contains information about player system and game integrity
     static void SendInfo_Hook(app::MoleMole_NetworkManager* __this, app::GKOJAICIOPA* info, MethodInfo* method)
     {
-        LOG_TRACE("Game sending game info to server.");
-        LOG_TRACE("Content: ");
+        LOG_TRACE(u8"游戏发送游戏信息到服务器.");
+        LOG_TRACE(u8"内容: ");
 
 #define printString(i) if (info->fields.string_ ## i > (void *)1 && info->fields.string_ ## i ##->fields.length > 0)\
     LOG_TRACE("\tfield#%d: %s", i ,il2cppi_to_string(info->fields.string_ ## i).c_str());

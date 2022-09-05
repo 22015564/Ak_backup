@@ -140,21 +140,21 @@ namespace cheat
 #undef FEAT_INST
 
 		manager.SetModuleOrder({
-			"Player",
-			"World",
-			"Teleport",
-			"ESP",
-			"Visuals",
-			"Hotkeys",
-			"Settings",
-			"About",
-			"Debug"
+			u8"人物",
+			u8"世界",
+			u8"传送",
+			u8"方框绘制",
+			u8"图像渲染",
+			u8"快捷键",
+			u8"设置",
+			u8"关于",
+			u8"调试"
 			});
 
 		LPBYTE pFontData = nullptr;
 		DWORD dFontSize = 0;
 		if (!ResourceLoader::LoadEx("ImGui_Font", RT_RCDATA, pFontData, dFontSize))
-			LOG_WARNING("Failed to get font from resources.");
+			LOG_WARNING(u8"无法从资源获取字体.");
 
 		manager.Init(pFontData, dFontSize);
 

@@ -8,7 +8,7 @@
 
 namespace cheat::feature
 {
-    const char* WeatherType[]{ "ClearSky", "Cloudy", "Foggy", "Storm", "RainHeavy", "FountainRain", "SnowLight", "EastCoast" };
+    const char* WeatherType[]{ u8"晴天", u8"多云", u8"雾天", u8"暴风雨", u8"大雨", u8"喷泉雨", u8"雪光", u8"东海岸" };
     std::string CustomWeather::GetWeather() {
         switch (current_weather)
         {
@@ -42,8 +42,8 @@ namespace cheat::feature
     }
 
     CustomWeather::CustomWeather() : Feature(),
-        NF(f_Enabled, "Custom Weather", "World", false),
-        NF(f_Lightning, "Lightning", "World", false),
+        NF(f_Enabled, u8"自定义天气", u8"世界", false),
+        NF(f_Lightning, u8"闪电", u8"世界", false),
         toBeUpdate(), nextUpdate(0)
     {
         events::GameUpdateEvent += MY_METHOD_HANDLER(CustomWeather::OnGameUpdate);
@@ -51,17 +51,17 @@ namespace cheat::feature
 
     const FeatureGUIInfo& CustomWeather::GetGUIInfo() const
     {
-        static const FeatureGUIInfo info{ "CustomWeather", "Visuals", true };
+        static const FeatureGUIInfo info{ u8"自定义天气", u8"图像渲染", true };
         return info;
     }
 
     void CustomWeather::DrawMain()
-    {     
-        ConfigWidget(f_Enabled, "Custom Weather.");
-        if (f_Enabled) {   
+    {
+        ConfigWidget(f_Enabled, u8"自定义天气.");
+        if (f_Enabled) {
             ImGui::Combo(("Weather Type"), &current_weather, WeatherType, ARRAYSIZE(WeatherType));
         }
-        ConfigWidget(f_Lightning, "Lightning target enemy, works with RainHeavy weather.");
+        ConfigWidget(f_Lightning, u8"闪电目标敌人，在大雨天气下工作.");
     }
 
     bool CustomWeather::NeedStatusDraw() const
@@ -71,9 +71,9 @@ namespace cheat::feature
 
     void CustomWeather::DrawStatus()
     {
-        ImGui::Text("Custom Weather");
+        ImGui::Text(u8"自定义天气");
         if (f_Lightning)
-           ImGui::Text("Lightning");
+            ImGui::Text(u8"闪电");
     }
 
     CustomWeather& CustomWeather::GetInstance()

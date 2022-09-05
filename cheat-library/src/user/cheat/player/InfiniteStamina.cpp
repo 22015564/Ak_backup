@@ -5,48 +5,48 @@
 #include <cheat/events.h>
 #include <cheat/game/EntityManager.h>
 
-namespace cheat::feature 
+namespace cheat::feature
 {
-    InfiniteStamina::InfiniteStamina() : Feature(),
-        NF(f_Enabled, "Infinite stamina", "InfiniteStamina", false),
-        NF(f_PacketReplacement, "Move sync packet replacement", "InfiniteStamina", false)
-    {
+	InfiniteStamina::InfiniteStamina() : Feature(),
+		NF(f_Enabled, u8"无线体力", u8"无线体力", false),
+		NF(f_PacketReplacement, u8"移动同步数据包替换", u8"无线体力", false)
+	{
 		HookManager::install(app::MoleMole_DataItem_HandleNormalProp, DataItem_HandleNormalProp_Hook);
 
 		events::MoveSyncEvent += MY_METHOD_HANDLER(InfiniteStamina::OnMoveSync);
-    }
+	}
 
-    const FeatureGUIInfo& InfiniteStamina::GetGUIInfo() const
-    {
-        static const FeatureGUIInfo info { "Infinite Stamina", "Player", true };
-        return info;
-    }
+	const FeatureGUIInfo& InfiniteStamina::GetGUIInfo() const
+	{
+		static const FeatureGUIInfo info{ u8"无限体力", u8"人物", true };
+		return info;
+	}
 
-    void InfiniteStamina::DrawMain()
-    {
-		ConfigWidget("Enabled", f_Enabled, "Enables infinite stamina option.");
+	void InfiniteStamina::DrawMain()
+	{
+		ConfigWidget(u8"开启", f_Enabled, u8"开启无限体力功能.");
 
-		ConfigWidget("Move Sync Packet Replacement", f_PacketReplacement,
-			"This mode prevents sending server packets with stamina cost actions,\n"
-			"e.g. swim, climb, sprint, etc.\n"
-			"NOTE: This is may be more safe than the standard method. More testing is needed.");
-    }
+		ConfigWidget(u8"移动同步数据包替换", f_PacketReplacement,
+			u8"此模式防止发送具有耐力成本动作的服务器数据包,\n"
+			u8"比如游泳、攀爬、短跑等.\n"
+			u8"注意: 这可能比标准方法更安全. 需要更多的测试.");
+	}
 
-    bool InfiniteStamina::NeedStatusDraw() const
-{
-        return f_Enabled;
-    }
+	bool InfiniteStamina::NeedStatusDraw() const
+	{
+		return f_Enabled;
+	}
 
-    void InfiniteStamina::DrawStatus() 
-    { 
-        ImGui::Text("Inf. Stamina [%s]", f_PacketReplacement ? "Packet" : "Normal");
-    }
+	void InfiniteStamina::DrawStatus()
+	{
+		ImGui::Text(u8"无线体力 [%s]", f_PacketReplacement ? u8"封包" : u8"普通");
+	}
 
-    InfiniteStamina& InfiniteStamina::GetInstance()
-    {
-        static InfiniteStamina instance;
-        return instance;
-    }
+	InfiniteStamina& InfiniteStamina::GetInstance()
+	{
+		static InfiniteStamina instance;
+		return instance;
+	}
 
 	// Infinite stamina offline mode. Blocks changes for stamina property. 
 	// Note. Changes received from the server (not sure about this for current time), 
@@ -61,9 +61,9 @@ namespace cheat::feature
 			override_cheat = true;
 
 		const bool result = !f_Enabled || f_PacketReplacement || override_cheat ||
-							(propType != PT::PROP_MAX_STAMINA &&
-							 propType != PT::PROP_CUR_PERSIST_STAMINA &&
-							 propType != PT::PROP_CUR_TEMPORARY_STAMINA);
+			(propType != PT::PROP_MAX_STAMINA &&
+				propType != PT::PROP_CUR_PERSIST_STAMINA &&
+				propType != PT::PROP_CUR_TEMPORARY_STAMINA);
 
 		if (propType == PT::PROP_MAX_STAMINA)
 			override_cheat = false;
@@ -116,7 +116,7 @@ namespace cheat::feature
 			}
 		}
 	}
-	
+
 	void InfiniteStamina::DataItem_HandleNormalProp_Hook(app::DataItem* __this, uint32_t type, int64_t value, app::DataPropOp__Enum state, MethodInfo* method)
 	{
 		auto& infiniteStamina = GetInstance();

@@ -8,25 +8,25 @@
 #include <cheat/game/util.h>
 #include <cheat/GenshinCM.h>
 
-namespace cheat::feature 
+namespace cheat::feature
 {
-    ItemTeleportBase::ItemTeleportBase(const std::string& section, const std::string& name) : Feature(),
-		NF(f_Key, "Teleport to Nearest", section, Hotkey()),
-		NF(f_ShowInfo, "Show Info", section, true),
-        section(section), name(name)
-    {
+	ItemTeleportBase::ItemTeleportBase(const std::string& section, const std::string& name) : Feature(),
+		NF(f_Key, u8"传送最近一个", section, Hotkey()),
+		NF(f_ShowInfo, u8"显示信息", section, true),
+		section(section), name(name)
+	{
 		f_Key.value().PressedEvent += MY_METHOD_HANDLER(ItemTeleportBase::OnTeleportKeyPressed);
-    }
+	}
 
-    void ItemTeleportBase::DrawMain()
-    {
-		auto desc = util::string_format("When key pressed, will teleport to nearest %s if exists.", name.c_str());
+	void ItemTeleportBase::DrawMain()
+	{
+		auto desc = util::string_format(u8"按下按键时, 将传送到最近的 %s 如果存在.", name.c_str());
 		ConfigWidget(f_Key, desc.c_str());
 
 		DrawFilterOptions();
 
 		DrawItems();
-    }
+	}
 
 	void ItemTeleportBase::DrawItems()
 	{
@@ -39,7 +39,7 @@ namespace cheat::feature
 	}
 
 	bool ItemTeleportBase::NeedInfoDraw() const
-{
+	{
 		return f_ShowInfo;
 	}
 
@@ -66,10 +66,10 @@ namespace cheat::feature
 		if (entity == nullptr)
 		{
 			ImGui::Text(name.c_str()); ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1.0f, 0.1f, 0.1f, 1.0f), "not found");
+			ImGui::TextColored(ImVec4(1.0f, 0.1f, 0.1f, 1.0f), u8"未找到");
 			return;
 		}
-		
+
 		auto& manager = game::EntityManager::instance();
 		ImGui::Text(name.c_str()); ImGui::SameLine();
 		ImGui::TextColored(ImVec4(0.1f, 1.0f, 0.1f, 1.0f), "%.3fm", manager.avatar()->distance(entity));
@@ -87,7 +87,7 @@ namespace cheat::feature
 		auto entities = manager.entities(*this);
 		if (entities.size() == 0)
 		{
-			ImGui::Text("Not found.");
+			ImGui::Text(u8"未找到.");
 			return;
 		}
 

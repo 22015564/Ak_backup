@@ -9,20 +9,20 @@ namespace cheat::feature
     app::GameObject* ui_camera{};
 
     HideUI::HideUI() : Feature(),
-		NFEX(f_Enabled, "Hide UI", "HideUI", "Visuals", false, false)
+		NFEX(f_Enabled, u8"隐藏 UI", "HideUI", u8"图像渲染", false, false)
     {
         events::GameUpdateEvent += MY_METHOD_HANDLER(HideUI::OnGameUpdate);
     }
 
     const FeatureGUIInfo& HideUI::GetGUIInfo() const
     {
-        static const FeatureGUIInfo info{ "HideUI", "Visuals", false };
+        static const FeatureGUIInfo info{ u8"隐藏UI", u8"图像渲染", false };
         return info;
     }
 
     void HideUI::DrawMain()
     {
-        ConfigWidget(f_Enabled, "Hide in-game UI.\nWhen you switch to another scene (e.g. into Domains), turn off and re-enable this feature");
+        ConfigWidget(f_Enabled, u8"隐藏游戏 UI.\n切换到另一场景（例如，进入副本）时，关闭并重新启用此功能");
     }
 
     bool HideUI::NeedStatusDraw() const
@@ -32,7 +32,7 @@ namespace cheat::feature
 
     void HideUI::DrawStatus()
     {
-        ImGui::Text("HideUI");
+        ImGui::Text(u8"隐藏UI");
     }
 
     HideUI& HideUI::GetInstance()

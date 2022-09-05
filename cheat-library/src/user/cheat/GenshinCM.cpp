@@ -25,8 +25,8 @@ bool cheat::GenshinCM::CursorGetVisibility()
 }
 
 cheat::GenshinCM::GenshinCM() :
-	NFEX(f_AccConfig, "Account Config", "data", "General::Multi-Account", internal::AccountConfig(), true),
-	NFS(f_ShowType,   "Name show type",         "General::Multi-Account", ShowType::Pseudo)
+	NFEX(f_AccConfig, u8"帐户配置", "data", "General::Multi-Account", internal::AccountConfig(), true),
+	NFS(f_ShowType, u8"名称显示类型", "General::Multi-Account", ShowType::Pseudo)
 {
 	events::AccountChangedEvent += MY_METHOD_HANDLER(cheat::GenshinCM::OnAccountChanged);
 }
@@ -52,7 +52,7 @@ std::string cheat::GenshinCM::GetAccountDisplayName(uint32_t uid)
 		auto& pseudos = f_AccConfig.value().pseudos;
 		return pseudos.count(uid) == 0 ? m_CurrentAccount.nickName : pseudos[uid];
 	}
-		break;
+	break;
 	}
 }
 
@@ -106,19 +106,19 @@ void cheat::GenshinCM::DrawProfileEntryActivities(const std::string& profileName
 	}
 
 	if (ImGui::IsItemHovered())
-		ImGui::SetTooltip(isAccountAttached ? "Dettach" : "Attach");
+		ImGui::SetTooltip(isAccountAttached ? "Dettach" : u8"添加");
 
 	if (m_CurrentAccount.userID == 0)
 		ImGui::EndDisabled();
 
 	ImGui::SameLine();
 
-	if (ImGui::SmallButton("Acl"))
-		ImGui::OpenPopup("Account list");
+	if (ImGui::SmallButton(u8"账号"))
+		ImGui::OpenPopup(u8"帐户列表");
 	if (ImGui::IsItemHovered())
-		ImGui::SetTooltip("Account list");
+		ImGui::SetTooltip(u8"帐户列表");
 
-	if (ImGui::BeginPopup("Account list", ImGuiWindowFlags_AlwaysAutoResize))
+	if (ImGui::BeginPopup(u8"帐户列表", ImGuiWindowFlags_AlwaysAutoResize))
 	{
 		DrawAccountsList(profileName);
 		ImGui::EndPopup();
@@ -134,7 +134,7 @@ void cheat::GenshinCM::DrawProfileEntry(const std::string& profileName)
 	auto accountCount = profileIds.count(profileName) > 0 ? profileIds[profileName].size() : 0;
 	if (accountCount == 0)
 	{
-		ImGui::Text("No accounts.");
+		ImGui::Text(u8"没有账号.");
 		return;
 	}
 
@@ -145,7 +145,7 @@ void cheat::GenshinCM::DrawProfileEntry(const std::string& profileName)
 void cheat::GenshinCM::DrawProfileTableHeader()
 {
 	CheatManagerBase::DrawProfileTableHeader();
-	ImGui::TableSetupColumn("Accounts");
+	ImGui::TableSetupColumn(u8"账号");
 }
 
 int cheat::GenshinCM::GetProfileTableColumnCount()
@@ -162,8 +162,8 @@ void cheat::GenshinCM::DrawAccountsList(const std::string& profileName)
 	if (ImGui::BeginTable("Accounts", 2, flags,
 		ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 10), 0.0f))
 	{
-		ImGui::TableSetupColumn("Name");
-		ImGui::TableSetupColumn("Actions");
+		ImGui::TableSetupColumn(u8"名称");
+		ImGui::TableSetupColumn(u8"数量");
 		ImGui::TableSetupScrollFreeze(0, 1);
 		ImGui::TableHeadersRow();
 
@@ -182,7 +182,7 @@ void cheat::GenshinCM::DrawAccountsList(const std::string& profileName)
 
 			ImGui::TableNextColumn();
 
-			if (ImGui::Button("Remove"))
+			if (ImGui::Button(u8"删除"))
 				DetachAccount(userID, profileName);
 
 			ImGui::SameLine();
@@ -231,14 +231,14 @@ void cheat::GenshinCM::DrawProfileLine()
 
 void cheat::GenshinCM::DrawProfileConfiguration()
 {
-	ConfigWidget(f_ShowType, "Set accounts' name showing type.");
+	ConfigWidget(f_ShowType, u8"设置帐户名称显示类型.");
 	auto& pseudos = f_AccConfig.value().pseudos;
 	if (pseudos.count(m_CurrentAccount.userID) > 0)
 	{
 		ImGui::Text("Pseudo: %s", pseudos[m_CurrentAccount.userID].c_str()); ImGui::SameLine();
 		DrawPseudoRename(m_CurrentAccount.userID);
 	}
-	
+
 	CheatManagerBase::DrawProfileConfiguration();
 }
 
@@ -246,7 +246,7 @@ void cheat::GenshinCM::DrawProfileConfiguration()
 void cheat::GenshinCM::DrawPseudoRename(uint32_t userID)
 {
 	auto& pseudo = f_AccConfig.value().pseudos[userID];
-	if (ImGui::Button("Rename (Pseudo)"))
+	if (ImGui::Button(u8"重命名（伪)"))
 		ImGui::OpenRenamePopup(pseudo);
 
 	if (ImGui::DrawRenamePopup(pseudo))
@@ -274,6 +274,6 @@ void cheat::GenshinCM::OnAccountChanged(uint32_t userID)
 	auto& settings = feature::Settings::GetInstance();
 
 	ImGuiToast toast(ImGuiToastType_Info, settings.f_NotificationsDelay.value(), "Account was updated.\nConfig profile was changed.");
-	toast.set_title("Config multi-account");
+	toast.set_title(u8"配置多帐户");
 	ImGui::InsertNotification(toast);
 }

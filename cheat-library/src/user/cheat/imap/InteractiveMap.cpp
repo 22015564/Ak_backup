@@ -20,40 +20,40 @@ namespace cheat::feature
 {
 
 	InteractiveMap::InteractiveMap() : Feature(),
-		NFEX(f_Enabled, "Interactive map", "m_InteractiveMap", "InteractiveMap", false, false),
-		NF(f_SeparatedWindows, "Separated windows", "InteractiveMap", true),
-		NF(f_CompletionLogShow, "Completion log show", "InteractiveMap", false),
+		NFEX(f_Enabled, u8"交互式地图", "m_InteractiveMap", "InteractiveMap", false, false),
+		NF(f_SeparatedWindows, u8"分隔窗", "InteractiveMap", false),
+		NF(f_CompletionLogShow, u8"完成输出日志", "InteractiveMap", false),
 
-		NFS(f_STFixedPoints, "Fixed points", "InteractiveMap", SaveAttachType::Global),
-		NFS(f_STCustomPoints, "Custom points", "InteractiveMap", SaveAttachType::Global),
-		NFS(f_STCompletedPoints, "Save completed points", "InteractiveMap", SaveAttachType::Account),
+		NFS(f_STFixedPoints, u8"固定点", "InteractiveMap", SaveAttachType::Global),
+		NFS(f_STCustomPoints, u8"自定义点", "InteractiveMap", SaveAttachType::Global),
+		NFS(f_STCompletedPoints, u8"保存已完成的点", "InteractiveMap", SaveAttachType::Account),
 
-		NF(f_IconSize, "Icon size", "InteractiveMap", 20.0f),
-		NF(f_MinimapIconSize, "Minimap icon size", "InteractiveMap", 14.0f),
-		NF(f_DynamicSize, "Dynamic size", "InteractiveMap", false),
-		NF(f_ShowHDIcons, "Show HD icons", "InteractiveMap", false),
+		NF(f_IconSize, u8"图标大小", "InteractiveMap", 20.0f),
+		NF(f_MinimapIconSize, u8"小地图图标大小", "InteractiveMap", 14.0f),
+		NF(f_DynamicSize, u8"动态尺寸", "InteractiveMap", false),
+		NF(f_ShowHDIcons, u8"显示高清图标", "InteractiveMap", false),
 
-		NF(f_ShowCompleted, "Show completed", "InteractiveMap", false),
-		NF(f_CompletePointTransparency, "Completed point transparency", "InteractiveMap", 0.5f),
-		NF(f_ShowInCompleted, "Show in-completed", "InteractiveMap", true),
-		NF(f_InCompletePointTransparency, "In-completed point transparency", "InteractiveMap", 1.0f),
+		NF(f_ShowCompleted, u8"显示已完成", "InteractiveMap", false),
+		NF(f_CompletePointTransparency, u8"完成点透明度", "InteractiveMap", 0.5f),
+		NF(f_ShowInCompleted, u8"显示未完成", "InteractiveMap", true),
+		NF(f_InCompletePointTransparency, u8"未完成点透明度", "InteractiveMap", 1.0f),
 
-		NF(f_AutoDetectNewItems, "Detect new items", "InteractiveMap", true),
-		NF(f_AutoFixItemPositions, "Fix item positions", "InteractiveMap", true),
-		NF(f_ObjectCheckOnlyShowed, "Detect only showed", "InteractMap", true),
-		NF(f_ObjectDetectRange, "Detect range", "InteractiveMap", 20.0f),
-		NF(f_CheckObjectsDelay, "Detect delay (ms)", "InteractiveMap", 2000),
+		NF(f_AutoDetectNewItems, u8"检测新项目", "InteractiveMap", true),
+		NF(f_AutoFixItemPositions, u8"固定项目位置", "InteractiveMap", true),
+		NF(f_ObjectCheckOnlyShowed, u8"检测仅显示", "InteractMap", true),
+		NF(f_ObjectDetectRange, u8"检测范围", "InteractiveMap", 20.0f),
+		NF(f_CheckObjectsDelay, u8"检测延迟 (毫秒)", "InteractiveMap", 2000),
 
-		NF(f_AutoDetectGatheredItems, "Detect gathered items", "InteractiveMap", true),
-		NF(f_GatheredItemsDetectRange, "Detect range", "InteractiveMap", 20.0f),
+		NF(f_AutoDetectGatheredItems, u8"检测收集的项目", "InteractiveMap", true),
+		NF(f_GatheredItemsDetectRange, u8"检测范围", "InteractiveMap", 25.0f),
 
-		NF(f_CompleteNearestPoint, "Complete nearest point", "InteractiveMap", Hotkey()),
-		NF(f_RevertLatestCompletion, "Revert latest completion", "InteractiveMap", Hotkey()),
-		NF(f_CompleteOnlyViewed, "Complete only showed", "InteractiveMap", true),
-		NF(f_PointFindRange, "Point finding range", "InteractiveMap", 30.0f),
+		NF(f_CompleteNearestPoint, u8"完全最近点", "InteractiveMap", Hotkey()),
+		NF(f_RevertLatestCompletion, u8"恢复到最新完成", "InteractiveMap", Hotkey()),
+		NF(f_CompleteOnlyViewed, u8"完成仅显示", "InteractiveMap", true),
+		NF(f_PointFindRange, u8"寻点距离", "InteractiveMap", 30.0f),
 
-		NFS(f_CustomPointIndex, "Custom point index", "InteractiveMap", 1000000),
-		NFS(f_LastUserID, "Last user id", "InteractiveMap", 0),
+		NFS(f_CustomPointIndex, "自定义点索引", "InteractiveMap", 1000000),
+		NFS(f_LastUserID, u8"最后用户id", "InteractiveMap", 0),
 
 		m_HoveredPoint(nullptr)
 	{
@@ -106,7 +106,7 @@ namespace cheat::feature
 
 	const FeatureGUIInfo& InteractiveMap::GetGUIInfo() const
 	{
-		static const FeatureGUIInfo info{ "", "World", false };
+		static const FeatureGUIInfo info{ "", u8"世界", false };
 		return info;
 	}
 
@@ -114,72 +114,72 @@ namespace cheat::feature
 
 	void InteractiveMap::DrawMenu()
 	{
-		ImGui::BeginGroupPanel("General");
+		ImGui::BeginGroupPanel(u8"总开关");
 		{
-			ConfigWidget("Enabled", f_Enabled);
-			ConfigWidget(f_SeparatedWindows, "Config and filters will be in separate windows.");
-			if (ConfigWidget(f_STCompletedPoints, "Save scope for completed items."))
+			ConfigWidget(u8"开启", f_Enabled);
+			ConfigWidget(f_SeparatedWindows, u8"配置和筛选器将在单独的窗口中.");
+			if (ConfigWidget(f_STCompletedPoints, u8"保存已完成项目的范围."))
 			{
 				UpdateUserDataField(f_CompletedPointsJson, f_STCompletedPoints.value(), true);
 			}
 		}
 		ImGui::EndGroupPanel();
 
-		ImGui::BeginGroupPanel("Icon view");
+		ImGui::BeginGroupPanel(u8"图标视图");
 		{
 			ConfigWidget(f_IconSize, 0.01f, 4.0f, 100.0f);
 			ConfigWidget(f_MinimapIconSize, 0.01f, 4.0f, 100.0f);
-			ConfigWidget(f_DynamicSize, "Icons will be sized dynamically depend to zoom size.\nMinimap icons don't affected.");
-			ConfigWidget(f_ShowHDIcons, "Toggle icons to HD format.");
+			ConfigWidget(f_DynamicSize, u8"图标将根据缩放大小动态调整大小.\n小地图图标不受影响.");
+			ConfigWidget(f_ShowHDIcons, u8"将图标切换为高清格式.");
 		}
 		ImGui::EndGroupPanel();
 
-		ImGui::BeginGroupPanel("In/Completed icon view");
+		ImGui::BeginGroupPanel(u8"完成/未完成任务点视图");
 		{
-			ConfigWidget(f_ShowCompleted, "Show completed points.");
-			ConfigWidget(f_CompletePointTransparency, 0.01f, 0.0f, 1.0f, "Completed points transparency.");
-			ConfigWidget(f_ShowInCompleted, "Show in-completed points.");
-			ConfigWidget(f_InCompletePointTransparency, 0.01f, 0.0f, 1.0f, "In-completed points transparency.");
+			ConfigWidget(f_ShowCompleted, u8"显示已完成点.");
+			ConfigWidget(f_CompletePointTransparency, 0.01f, 0.0f, 1.0f, u8"已完成点透明度.");
+			ConfigWidget(f_ShowInCompleted, u8"显示未完成点.");
+			ConfigWidget(f_InCompletePointTransparency, 0.01f, 0.0f, 1.0f, u8"未完成点透明度.");
 		}
 		ImGui::EndGroupPanel();
 
-		ImGui::BeginGroupPanel("Item adjusting");
+		ImGui::BeginGroupPanel(u8"项目调整");
 		{
-			ConfigWidget(f_AutoFixItemPositions, "Do fix positions to nearest to point.\n"
-				"Only items with green line support this function.");
+			ConfigWidget(f_AutoFixItemPositions, u8"将位置固定到最近的点.\n"
+				u8"只有绿线项目支持此功能.");
 
-			ConfigWidget(f_AutoDetectNewItems, "Enables detecting items what are not in interactive map data.\n"
-				"Only items with green line support this function.");
+			ConfigWidget(f_AutoDetectNewItems, u8"启用检测不在交互式地图数据中的项目.\n"
+				u8"只有绿线项目支持此功能.");
 
-			ConfigWidget(f_ObjectCheckOnlyShowed, "Detect objects only for showed filters.");
+			ConfigWidget(f_ObjectCheckOnlyShowed, u8"仅为检测开启显示的对象.");
 
 			ConfigWidget(f_ObjectDetectRange, 0.1f, 5.0f, 30.0f,
-				"Fix positions: Only if item was found in this range about entity position,\n\t its position will be fixed.\n"
-				"New item detecting: Only if item not found in this range about entity position,\n\t it be detected as new."
+				u8"定位: 仅当在此范围内拾取指定物品时,\n\t 其位置将被固定.\n"
+				u8"新项目检测: 仅当在此范围内未找到关于实体位置时,\n\t 它将被检测为新的."
 			);
 
-			ConfigWidget(f_CheckObjectsDelay, 10, 100, 100000, "Adjusting items is power consumption operation.\n"
-				"So rescanning will happen with specified delay.");
+			ConfigWidget(f_CheckObjectsDelay, 10, 100, 100000, u8"调整项目需要占用更多资源.\n"
+				u8"因此，重新扫描将以指定的延迟进行.");
 		}
 		ImGui::EndGroupPanel();
 
-		ImGui::BeginGroupPanel("Gather detecting");
+		ImGui::BeginGroupPanel(u8"收集检测");
 		{
-			ConfigWidget(f_AutoDetectGatheredItems, "Enables detecting gathered items.\n"
-				"It works only items what will be gathered after enabling this function.\n"
-				"Only items with blue line support this function.");
+			ConfigWidget(f_AutoDetectGatheredItems, u8"启用检测收集的项目.\n"
+				u8"它仅适用于启用此功能后将收集的项目.\n"
+				u8"只有蓝线项目支持此功能.");
 
 			ConfigWidget(f_GatheredItemsDetectRange, 0.1f, 5.0f, 30.0f,
-				"When entity was gathered finding nearest point in this range.");
+				u8"收集实体时，在此范围内完成最近的点.");
 		}
 		ImGui::EndGroupPanel();
 
-		ImGui::BeginGroupPanel("Manual completing");
+		ImGui::BeginGroupPanel(u8"手动完成");
 		{
-			ConfigWidget(f_CompleteNearestPoint, true, "When pressed, complete the nearest to avatar point.");
-			ConfigWidget(f_RevertLatestCompletion, true, "When pressed, revert latest complete operation.");
-			ConfigWidget(f_CompleteOnlyViewed, "Complete performed only to visible points.");
-			ConfigWidget(f_PointFindRange, 0.5f, 0.0f, 200.0f, "Complete performs within specified range. If 0 - unlimited.");
+			ConfigWidget(f_CompleteNearestPoint, true, u8"按下时，完成最近的标记点.");
+			ConfigWidget(f_RevertLatestCompletion, true, u8"按下时，恢复到最新的完整操作.");
+			ConfigWidget(f_CompleteOnlyViewed, u8"完成：仅对可见点执行.");
+			ConfigWidget(f_PointFindRange, 0.5f, 0.0f, 200.0f, u8"完成：在指定范围内执行（米）.");
 		}
 		ImGui::EndGroupPanel();
 	}
@@ -188,19 +188,19 @@ namespace cheat::feature
 	{
 		const auto sceneID = game::GetCurrentMapSceneID();
 		if (m_ScenesData.count(sceneID) == 0)
-			ImGui::Text("Sorry. Current scene is not supported.");
-		
-		ImGui::InputText("Search", &m_SearchText); ImGui::SameLine();
+			ImGui::Text(u8"很抱歉不支持当前场景.");
+
+		ImGui::InputText(u8"搜索", &m_SearchText); ImGui::SameLine();
 		HelpMarker(
-			"This page following with filters for items.\n"
-			"Items what was activated will be appear on mini/global map. (Obviously)\n"
-			"Each filter have options, you can access to it by clicking RMB on filter.\n"
-			"Filters can be marked with colored lines,\n"
-			"\tthey indicate that filter support some features. (Hover it)\n"
-			"Thats all for now. Happy using ^)"
+			u8"以下页面包含项目的筛选器.\n"
+			u8"开启的项目将显示在迷你/全局地图上.\n"
+			u8"每个过滤器都有选项，您可以通过在过滤器上右键来访问它.\n"
+			u8"过滤器可以用彩色线标记,\n"
+			u8"\t它们表示过滤器支持某些功能. (悬停)\n"
+			u8"这就是所有. 使用愉快 ^)"
 		);
 		if (searchFixed)
-			ImGui::BeginChild("FiltersList", ImVec2(-1, 0), false, ImGuiWindowFlags_NoBackground);
+			ImGui::BeginChild(u8"过滤列表", ImVec2(-1, 0), false, ImGuiWindowFlags_NoBackground);
 
 		auto& categories = m_ScenesData[sceneID].categories;
 		for (auto& [categoryName, labels] : categories)
@@ -232,7 +232,7 @@ namespace cheat::feature
 
 			if (ImGui::BeginSelectableGroupPanel(categoryName.c_str(), checked, changed, true))
 			{
-				if (ImGui::BeginTable("MarkFilters", 2))
+				if (ImGui::BeginTable(u8"标记过滤器", 2))
 				{
 					for (const auto& label : validLabels)
 					{
@@ -253,7 +253,7 @@ namespace cheat::feature
 					label->enabled = checked;
 				}
 			}
-			
+
 		}
 
 		if (searchFixed)
@@ -353,14 +353,14 @@ namespace cheat::feature
 		{
 			ImVec2 mark_pos = ImVec2(cursorX + halfSpacing, image_bb.Min.y + style.FramePadding.y);
 			ImVec2 mark_size = ImVec2(markWidth, image_bb.Max.y - image_bb.Min.y - 2 * style.FramePadding.y);
-			
+
 			if (haveFilter)
-			{ 
+			{
 				ImRect mark_bb = { mark_pos, mark_pos + mark_size };
 				if (ImGui::IsMouseHoveringRect(mark_bb.Min, mark_bb.Max))
 				{
 					markHovered = true;
-					ShowHelpText("New items detect supported");
+					ShowHelpText(u8"支持新项目检测");
 				}
 
 				ImGui::RenderFrame(mark_bb.Min, mark_bb.Max, ImColor(0.0f, 1.0f, 0.0f), false, 3.0f);
@@ -373,7 +373,7 @@ namespace cheat::feature
 				if (ImGui::IsMouseHoveringRect(mark_bb.Min, mark_bb.Max))
 				{
 					markHovered = true;
-					ShowHelpText("Gather detect supported");
+					ShowHelpText(u8"支持收集和检测");
 				}
 
 				ImGui::RenderFrame(mark_bb.Min, mark_bb.Max, ImColor(0.0f, 0.0f, 1.0f), false, 3.0f);
@@ -383,7 +383,7 @@ namespace cheat::feature
 			cursorX = mark_pos.x;
 		}
 		// --
-		
+
 		// --
 		ImVec2 label_progress_pos = ImVec2(cursorX + style.ItemInnerSpacing.x, image_bb.Min.y + style.FramePadding.y);
 		ImGui::RenderText(label_progress_pos, progress_text.c_str());
@@ -415,7 +415,7 @@ namespace cheat::feature
 				}
 				ImGui::CloseCurrentPopup();
 			}
-			if (ImGui::Button("Complete progress"))
+			if (ImGui::Button(u8"完成进度"))
 			{
 				for (auto& [pointID, point] : label.points)
 				{
@@ -483,7 +483,7 @@ namespace cheat::feature
 			return nullptr;
 
 		auto& labels = m_ScenesData[sceneID].labels;
-		
+
 		PointData* minDistancePoint = nullptr;
 		float minDistance = 0;
 		for (auto& [labelID, label] : labels)
@@ -570,7 +570,7 @@ namespace cheat::feature
 		pointData->completeTimestamp = util::GetCurrentTimeMillisec();
 		m_ScenesData[pointData->sceneID].labels[pointData->labelID].completedCount++;
 		m_CompletedPoints.push_back(pointData);
-		
+
 		SaveCompletedPoints();
 	}
 
@@ -578,8 +578,8 @@ namespace cheat::feature
 	{
 		std::lock_guard _userDataLock(m_UserDataMutex);
 
-        auto pointDataIterator = std::find_if(m_CompletedPoints.begin(), m_CompletedPoints.end(), [=](PointData* data) { return pointData->id == data->id; });
-        if (pointDataIterator == m_CompletedPoints.end())
+		auto pointDataIterator = std::find_if(m_CompletedPoints.begin(), m_CompletedPoints.end(), [=](PointData* data) { return pointData->id == data->id; });
+		if (pointDataIterator == m_CompletedPoints.end())
 			return;
 
 		pointData->completed = false;
@@ -596,8 +596,8 @@ namespace cheat::feature
 		if (m_CompletedPoints.empty())
 			return;
 
-        auto pointDataIterator = --m_CompletedPoints.end();
-        PointData* pointData = *pointDataIterator;
+		auto pointDataIterator = --m_CompletedPoints.end();
+		PointData* pointData = *pointDataIterator;
 		pointData->completed = false;
 		pointData->completeTimestamp = 0;
 		m_ScenesData[pointData->sceneID].labels[pointData->labelID].completedCount--;
@@ -723,7 +723,7 @@ namespace cheat::feature
 			std::unordered_set<PointData*> pointsSet;
 			for (auto& [pointID, point] : label->points)
 				pointsSet.insert(&point);
-			
+
 			for (auto& entity : entities)
 			{
 				PointData* nearestPoint = nullptr;
@@ -895,7 +895,7 @@ namespace cheat::feature
 				labelData->sceneID, labelData->name.c_str(), customPoint.levelPosition.x, customPoint.levelPosition.y);
 			return;
 		}
-		
+
 		auto& newPointEntry = labelData->points[customPoint.id];
 		newPointEntry = customPoint;
 		newPointEntry.sceneID = labelData->sceneID;
@@ -975,7 +975,7 @@ namespace cheat::feature
 
 				for (auto& [pointID, point] : label.points)
 					(this->*func)(container, &point);
-				
+
 				if (container.empty())
 					jLabels.erase(cLabelID);
 			}
@@ -1043,10 +1043,10 @@ namespace cheat::feature
 		m_CompletedPoints.clear();
 	}
 
-    void InteractiveMap::ReorderCompletedPointDataByTimestamp()
-    {
-        m_CompletedPoints.sort([](PointData* a, PointData* b) { return a->completeTimestamp < b->completeTimestamp; });
-    }
+	void InteractiveMap::ReorderCompletedPointDataByTimestamp()
+	{
+		m_CompletedPoints.sort([](PointData* a, PointData* b) { return a->completeTimestamp < b->completeTimestamp; });
+	}
 
 	void InteractiveMap::LoadCustomPoints()
 	{
@@ -1160,46 +1160,46 @@ namespace cheat::feature
 
 		labelEntry.id = labelID;
 		labelEntry.sceneID = sceneID;
-        labelEntry.name = data["name"];
-        labelEntry.clearName = data["clear_name"];
-        labelEntry.enabled = config::CreateField<bool>(labelEntry.name, labelEntry.clearName,
+		labelEntry.name = data["name"];
+		labelEntry.clearName = data["clear_name"];
+		labelEntry.enabled = config::CreateField<bool>(labelEntry.name, labelEntry.clearName,
 			fmt::format("InteractiveMap::Filters::Scene{}", sceneID), false, false);
 
-        for (auto& pointJsonData : data["points"])
-        {
+		for (auto& pointJsonData : data["points"])
+		{
 			PointData data = ParsePointData(pointJsonData);
 			data.labelID = labelID;
 			data.sceneID = sceneID;
 
 			labelEntry.points[data.id] = data;
-        }
+		}
 
-        sceneData.nameToLabel[labelEntry.clearName] = &labelEntry;
+		sceneData.nameToLabel[labelEntry.clearName] = &labelEntry;
 	}
 
 	void InteractiveMap::LoadCategoriaData(const nlohmann::json& data, uint32_t sceneID)
 	{
-        auto& sceneData = m_ScenesData[sceneID];
-        auto& labels = sceneData.labels;
-        auto& categories = sceneData.categories;
-        
-        categories.push_back({});
-        auto& newCategory = categories.back();
-        
-        auto& children = newCategory.children;
-        for (auto& child : data["children"])
-        {
-            if (labels.count(child) > 0)
-                children.push_back(&labels[child]);
-        }
+		auto& sceneData = m_ScenesData[sceneID];
+		auto& labels = sceneData.labels;
+		auto& categories = sceneData.categories;
 
-        if (children.size() == 0)
-        {
-            categories.pop_back();
-            return;
-        }
+		categories.push_back({});
+		auto& newCategory = categories.back();
 
-        newCategory.name = data["name"];
+		auto& children = newCategory.children;
+		for (auto& child : data["children"])
+		{
+			if (labels.count(child) > 0)
+				children.push_back(&labels[child]);
+		}
+
+		if (children.size() == 0)
+		{
+			categories.pop_back();
+			return;
+		}
+
+		newCategory.name = data["name"];
 	}
 
 	void InteractiveMap::LoadSceneData(const nlohmann::json& data, uint32_t sceneID)
@@ -1209,45 +1209,45 @@ namespace cheat::feature
 			LoadLabelData(labelData, sceneID, std::stoi(labelID));
 		}
 
-        for (auto& categorie : data["categories"])
-        {
-            LoadCategoriaData(categorie, sceneID);
-        }
+		for (auto& categorie : data["categories"])
+		{
+			LoadCategoriaData(categorie, sceneID);
+		}
 	}
 
 	void InteractiveMap::LoadScenesData()
 	{
-        LoadSceneData(nlohmann::json::parse(ResourceLoader::Load("MapTeyvatData", RT_RCDATA)), 3);
-        LoadSceneData(nlohmann::json::parse(ResourceLoader::Load("MapEnkanomiyaData", RT_RCDATA)), 5);
-        LoadSceneData(nlohmann::json::parse(ResourceLoader::Load("MapUndegroundMinesData", RT_RCDATA)), 6);
-        LoadSceneData(nlohmann::json::parse(ResourceLoader::Load("MapGoldenAppleArchipelagoData", RT_RCDATA)), 9);
+		LoadSceneData(nlohmann::json::parse(ResourceLoader::Load("MapTeyvatData", RT_RCDATA)), 3);
+		LoadSceneData(nlohmann::json::parse(ResourceLoader::Load("MapEnkanomiyaData", RT_RCDATA)), 5);
+		LoadSceneData(nlohmann::json::parse(ResourceLoader::Load("MapUndegroundMinesData", RT_RCDATA)), 6);
+		LoadSceneData(nlohmann::json::parse(ResourceLoader::Load("MapGoldenAppleArchipelagoData", RT_RCDATA)), 9);
 
-        LOG_INFO("Interactive map data loaded successfully.");
-    }
+		LOG_INFO("Interactive map data loaded successfully.");
+	}
 
-    struct ScalingData
-    {
-        float scale;
-        float offset;
-    };
+	struct ScalingData
+	{
+		float scale;
+		float offset;
+	};
 
-    ScalingData ComputeScaling(app::Vector2 normal, app::Vector2 scaled)
-    {
+	ScalingData ComputeScaling(app::Vector2 normal, app::Vector2 scaled)
+	{
 		// Just the equation system: 
 		//	s[0] * scale + offset = n[0]
 		//	s[1] * scale + offset = n[1]
 		// Where: s = scaled, n = normal
 
-        ScalingData scalingData {};
-        scalingData.scale = (normal.y - normal.x) / (scaled.y - scaled.x);
-        scalingData.offset = normal.x - scaled.x * scalingData.scale;
-        
-        return scalingData;
-    }
+		ScalingData scalingData {};
+		scalingData.scale = (normal.y - normal.x) / (scaled.y - scaled.x);
+		scalingData.offset = normal.x - scaled.x * scalingData.scale;
+
+		return scalingData;
+	}
 
 
 	void InteractiveMap::ApplySceneScalling(uint32_t sceneId, const ScallingInput& input)
-    {
+	{
 		ScalingData xScale = ComputeScaling({ input.normal1.x, input.normal2.x }, { input.scalled1.x, input.scalled2.x });
 		ScalingData yScale = ComputeScaling({ input.normal1.y, input.normal2.y }, { input.scalled1.y, input.scalled2.y });
 
@@ -1263,8 +1263,8 @@ namespace cheat::feature
 				point.levelPosition = point.levelPosition * scale + offset;
 			}
 		}
-		
-    }
+
+	}
 
 	void InteractiveMap::ApplyScaling()
 	{
@@ -1290,7 +1290,7 @@ namespace cheat::feature
 			"Medaka", -649.27f, 776.9f,
 			"SweetFlowerMedaka", -720.16f, 513.55f);
 
-    	APPLY_SCENE_OFFSETS(9,
+		APPLY_SCENE_OFFSETS(9,
 			"PaleRedCrab", -396.38f, -253.75f,
 			"GoldenCrab", 145.89f, 215.34f);
 #undef APPLY_SCENE_OFFSETS
@@ -1331,7 +1331,7 @@ namespace cheat::feature
 		return screenPosition;
 	}
 
-    inline ImVec2 operator - (const ImVec2& A, const float k)
+	inline ImVec2 operator - (const ImVec2& A, const float k)
 	{
 		return { A.x - k, A.y - k };
 	}
@@ -1371,7 +1371,7 @@ namespace cheat::feature
 			_monoMiniMap = nullptr;
 			return false;
 		}
-			 
+
 		SAFE_BEGIN();
 		return app::Behaviour_get_isActiveAndEnabled(reinterpret_cast<app::Behaviour*>(_monoMiniMap), nullptr);
 		SAFE_ERROR();
@@ -1408,7 +1408,7 @@ namespace cheat::feature
 		if (mapActive != _lastMapActive)
 		{
 			MapToggled(mapActive);
-			
+
 			if (!mapActive)
 				renderer::SetInputLock(this, false);
 		}
@@ -1416,7 +1416,7 @@ namespace cheat::feature
 		_lastMapActive = mapActive;
 
 		if (!mapActive)
-            return;
+			return;
 
 		// If any InputText is focused, the game will not respond any keyboard input.
 		auto ctx = ImGui::GetCurrentContext();
@@ -1432,7 +1432,7 @@ namespace cheat::feature
 		// Draw windows
 		{
 			std::lock_guard _rectGuard(_windowRectsMutex);
-			
+
 			_windowRects.clear();
 
 			bool menuOpened = ImGui::Begin("Interactive map", nullptr, ImGuiWindowFlags_NoFocusOnAppearing);
@@ -1465,7 +1465,7 @@ namespace cheat::feature
 		if (!f_Enabled)
 			return;
 
-        DrawPoints();
+		DrawPoints();
 	}
 
 	static bool IsRectInScreen(const ImRect& rect, const ImVec2& screenSize)
@@ -1473,7 +1473,7 @@ namespace cheat::feature
 		return rect.Min.x < screenSize.x && rect.Min.y < screenSize.y &&
 			rect.Max.x > 0 && rect.Max.y > 0;
 	}
-	
+
 	static void RenderPointCircle(const ImVec2& position, ImTextureID textureID, float transparency, float radius, bool isCustom = false)
 	{
 		ImVec2 imageStartPos = position - radius;
@@ -1495,7 +1495,7 @@ namespace cheat::feature
 	{
 		if (pointData.completed && !f_ShowCompleted || !f_ShowInCompleted && !pointData.completed)
 			return;
-		
+
 		float transparency = pointData.completed ? f_CompletePointTransparency : f_InCompletePointTransparency;
 
 		if (/* m_SelectedPoint == nullptr && */!selectable || m_HoveredPoint != nullptr)
@@ -1523,10 +1523,10 @@ namespace cheat::feature
 				UncompletePoint(m_HoveredPoint);
 			else
 				CompletePoint(m_HoveredPoint);
-		}	
+		}
 	}
 
-    void InteractiveMap::DrawPoints()
+	void InteractiveMap::DrawPoints()
 	{
 		static const float relativeSizeX = 821.0f;
 
@@ -1537,7 +1537,7 @@ namespace cheat::feature
 		ImVec2 screenSize = { static_cast<float>(app::Screen_get_width(nullptr)),
 			static_cast<float>(app::Screen_get_height(nullptr)) };
 
-		
+
 		auto iconSize = (f_DynamicSize && s_MapViewRect.m_Width != 0.0f) ? f_IconSize * (relativeSizeX / s_MapViewRect.m_Width) : f_IconSize;
 		auto radius = iconSize / 2;
 		auto radiusSquared = radius * radius;
@@ -1604,7 +1604,7 @@ namespace cheat::feature
 		auto mapPos = app::Transform_get_position(reinterpret_cast<app::Transform*>(back), nullptr);
 		auto center = app::Camera_WorldToScreenPoint(uiManager->fields._uiCamera, mapPos, nullptr);
 		center.y = app::Screen_get_height(nullptr) - center.y;
-	 
+
 		if (mapRect.m_Width == 0)
 			mapRect = app::RectTransform_get_rect(back, nullptr);
 
@@ -1613,7 +1613,7 @@ namespace cheat::feature
 			_miniMapCircle = {
 				ImVec2(center.x, center.y),
 				(mapRect.m_Width * scaleFactor) / 2
-			};
+		};
 
 		return _miniMapCircle;
 	}
@@ -1662,7 +1662,7 @@ namespace cheat::feature
 		ImCircle minimapCircle = GetMinimapCircle();
 		auto avatarLevelPos = game::EntityManager::instance().avatar()->levelPosition();
 		auto scale = minimapCircle.radius * GetMinimapScale() / minimapAreaLevelRadius;
-		
+
 		auto iconRadius = f_MinimapIconSize / 2;
 
 		auto& labels = m_ScenesData[sceneID].labels;
@@ -1768,7 +1768,7 @@ namespace cheat::feature
 		for (auto& label : labels)
 		{
 			label->filter = filter;
-		}		
+		}
 	}
 
 	void InteractiveMap::InitializeEntityFilters()
@@ -1925,7 +1925,7 @@ namespace cheat::feature
 			{ \
 				label->supportGatherDetect = true; \
 			} \
-		
+
 		INIT_DETECT_ITEM(CommonChest);
 		INIT_DETECT_ITEM(ExquisiteChest);
 		INIT_DETECT_ITEM(PreciousChest);

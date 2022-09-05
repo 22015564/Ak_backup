@@ -15,16 +15,16 @@ namespace cheat::feature
 	static void LCBaseCombat_FireBeingHitEvent_Hook(app::LCBaseCombat* __this, uint32_t attackeeRuntimeID, app::AttackResult* attackResult, MethodInfo* method);
 
 	RapidFire::RapidFire() : Feature(),
-		NF(f_Enabled, "Attack Multiplier", "RapidFire", false),
-		NF(f_MultiHit, "Multi-hit", "RapidFire", false),
-		NF(f_Multiplier, "Hit Multiplier", "RapidFire", 2),
+		NF(f_Enabled, u8"倍伤", "RapidFire", false),
+		NF(f_MultiHit, u8"多击模式", "RapidFire", false),
+		NF(f_Multiplier, u8"Hit Multiplier", "RapidFire", 2),
 		NF(f_OnePunch, "One Punch Mode", "RapidFire", false),
-		NF(f_Randomize, "Randomize", "RapidFire", false),
+		NF(f_Randomize, u8"随机数", "RapidFire", false),
 		NF(f_minMultiplier, "Min Multiplier", "RapidFire", 1),
 		NF(f_maxMultiplier, "Max Multiplier", "RapidFire", 3),
-		NF(f_MultiTarget, "Multi-target", "RapidFire", false),
+		NF(f_MultiTarget, u8"多目标", "RapidFire", false),
 		NF(f_MultiTargetRadius, "Multi-target Radius", "RapidFire", 20.0f),
-		NF(f_MultiAnimation, "Multi-animation", "RapidFire", false)
+		NF(f_MultiAnimation, u8"多倍技能", "RapidFire", false)
 	{
 		// HookManager::install(app::MoleMole_LCBaseCombat_DoHitEntity, LCBaseCombat_DoHitEntity_Hook); -- Looks like FireBeingHitEvent is superior to this.
 		HookManager::install(app::MoleMole_VCAnimatorEvent_HandleProcessItem, VCAnimatorEvent_HandleProcessItem_Hook);
@@ -33,58 +33,59 @@ namespace cheat::feature
 
 	const FeatureGUIInfo& RapidFire::GetGUIInfo() const
 	{
-		static const FeatureGUIInfo info{ "Attack Effects", "Player", true };
+		static const FeatureGUIInfo info{ u8"攻击效果", u8"人物", true };
 		return info;
 	}
 
 	void RapidFire::DrawMain()
 	{
-		ConfigWidget("Enabled", f_Enabled, "Enables attack multipliers. Need to choose a mode to work.");
+		ConfigWidget(u8"总开关", f_Enabled, u8"开启攻击效果. 需要选择一个攻击模式.");
 		ImGui::SameLine();
-		ImGui::TextColored(ImColor(255, 165, 0, 255), "Choose any or both modes below.");
+		ImGui::TextColored(ImColor(255, 165, 0, 255), u8"选择以下任一或两种模式.");
 
-		ConfigWidget("Multi-hit Mode", f_MultiHit, "Enables multi-hit.\n" \
-			"Multiplies your attack count.\n" \
-			"This is not well tested, and can be detected by anticheat.\n" \
-			"Not recommended to be used with main accounts or used with high values.\n");
+		ConfigWidget(u8"多倍攻击模式", f_MultiHit, u8"开启多倍攻击模式.\n" \
+			u8"乘以你的攻击次数.\n" \
+			u8"这没有经过很好的测试, 可能会被检测.\n" \
+			u8"不建议与主帐户一起使用或高数值使用.\n" \
+			u8"深渊中启用此项大概率会被检测.\n");
 
 		ImGui::Indent();
 
-		ConfigWidget("One-Punch Mode", f_OnePunch, "Calculate how many attacks needed to kill an enemy based on their HP\n" \
-			"and uses that to set the multiplier accordingly.\n" \
-			"May be safer, but multiplier calculation may not be on-point.");
+		ConfigWidget(u8"秒杀模式", f_OnePunch, u8"根据敌人的生命值计算杀死敌人所需的攻击次数\n" \
+			u8"并使用它相应地设置乘数.\n" \
+			u8"可能安全, 但乘数计算可能不正确.");
 
-		ConfigWidget("Randomize Multiplier", f_Randomize, "Randomize multiplier between min and max multiplier.");
+		ConfigWidget(u8"随机倍数伤害", f_Randomize, u8"在最小和最大乘数之间随机化乘数.");
 		ImGui::SameLine();
-		ImGui::TextColored(ImColor(255, 165, 0, 255), "This will override One-Punch Mode!");
+		ImGui::TextColored(ImColor(255, 165, 0, 255), u8"这将覆盖秒杀模式!");
 
 		if (!f_OnePunch) {
 			if (!f_Randomize)
 			{
-				ConfigWidget("Multiplier", f_Multiplier, 1, 2, 1000, "Attack count multiplier.");
+				ConfigWidget(u8"倍数", f_Multiplier, 1, 2, 1000, u8"攻击计数乘数.");
 			}
 			else
 			{
-				ConfigWidget("Min Multiplier", f_minMultiplier, 1, 1, 1000, "Attack count minimum multiplier.");
-				ConfigWidget("Max Multiplier", f_maxMultiplier, 1, 2, 1000, "Attack count maximum multiplier.");
+				ConfigWidget(u8"最小倍数", f_minMultiplier, 1, 2, 1000, u8"攻击计数最小乘数.");
+				ConfigWidget(u8"最大倍数", f_maxMultiplier, 1, 2, 1000, u8"攻击计数最大乘数.");
 			}
 		}
 
 		ImGui::Unindent();
 
-		ConfigWidget("Multi-target", f_MultiTarget, "Enables multi-target attacks within specified radius of target.\n" \
-			"All valid targets around initial target will be hit based on setting.\n" \
-			"Damage numbers will only appear on initial target but all valid targets are damaged.\n" \
-			"If multi-hit is off and there are still multiple numbers on a single target, check the Entity Manager in the Debug section to see if there are invisible entities.\n" \
-			"This can cause EXTREME lag and quick bans if used with multi-hit. You are warned."
+		ConfigWidget(u8"范围伤害", f_MultiTarget, u8"在指定的目标半径内启用多目标攻击.\n" \
+			u8"初始目标周围的所有有效目标将根据设置伤害命中.\n" \
+			u8"伤害数字将仅出现在初始目标上，但所有有效目标都受到伤害.\n" \
+			u8"如果禁用“范围伤害”，并且单个目标上仍有多个数字, 检查调试部分中的实体管理器，查看是否存在不可见的实体.\n" \
+			u8"如果与多击一起使用，这可能会导致极端滞后和快速禁止. 你将被封禁."
 		);
 
 		ImGui::Indent();
-		ConfigWidget("Radius (m)", f_MultiTargetRadius, 0.1f, 5.0f, 50.0f, "Radius to check for valid targets.");
+		ConfigWidget(u8"半径 (米)", f_MultiTargetRadius, 0.1f, 5.0f, 50.0f, u8"检查有效目标的半径.");
 		ImGui::Unindent();
 
-		ConfigWidget("Multi-animation", f_MultiAnimation, "Enables multi-animation attacks.\n" \
-			"Do keep in mind that the character's audio will also be spammed.");
+		ConfigWidget(u8"多倍技能", f_MultiAnimation, u8"启用多重技能伤害.\n" \
+			"注意，人物释放技能时的语音也会被重复（有点难受）.");
 	}
 
 	bool RapidFire::NeedStatusDraw() const
@@ -97,17 +98,17 @@ namespace cheat::feature
 		if (f_MultiHit)
 		{
 			if (f_Randomize)
-				ImGui::Text("Multi-Hit Random[%d|%d]", f_minMultiplier.value(), f_maxMultiplier.value());
+				ImGui::Text(u8"倍伤 随机[%d|%d]", f_minMultiplier.value(), f_maxMultiplier.value());
 			else if (f_OnePunch)
-				ImGui::Text("Multi-Hit [OnePunch]");
+				ImGui::Text(u8"倍伤 [一拳]");
 			else
-				ImGui::Text("Multi-Hit [%d]", f_Multiplier.value());
+				ImGui::Text(u8"倍伤 [%d]", f_Multiplier.value());
 		}
 		if (f_MultiTarget)
-			ImGui::Text("Multi-Target [%.01fm]", f_MultiTargetRadius.value());
+			ImGui::Text(u8"范围伤害 [%.01fm]", f_MultiTargetRadius.value());
 
 		if (f_MultiAnimation)
-			ImGui::Text("Multi-Animation");
+			ImGui::Text(u8"多倍技能");
 	}
 
 	RapidFire& RapidFire::GetInstance()

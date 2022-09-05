@@ -17,13 +17,13 @@
 namespace cheat::feature
 {
 	CustomTeleports::CustomTeleports() : Feature(),
-		NF(f_Enabled,		"Custom Teleport",		"CustomTeleports",	false),
-		NF(f_Next,			"Teleport Next",		"CustomTeleports",	Hotkey(VK_OEM_6)),
-		NF(f_Previous,		"Teleport Previous",	"CustomTeleports",	Hotkey(VK_OEM_4)),
-		NF(f_Auto,			"Auto Teleport",		"CustomTeleports",	false),
-		NF(f_DelayTime,		"Delay time (in s)",	"CustomTeleports",	20),
-		NF(f_Interpolate,	"Interpolate Teleport",	"CustomTeleports",	false),
-		NF(f_Speed,			"Interpolation Speed",	"CustomTeleports",	10.0f),
+		NF(f_Enabled,		u8"自定义传送",		u8"自定义传送",	false),
+		NF(f_Next,			u8"传送下一个",		u8"自定义传送",	Hotkey(VK_OEM_6)),
+		NF(f_Previous,		u8"传送上一个",		u8"自定义传送",	Hotkey(VK_OEM_4)),
+		NF(f_Auto,			u8"自动传送",		u8"自定义传送",	false),
+		NF(f_DelayTime,		u8"延迟时间 (秒)",	u8"自定义传送",	20),
+		NF(f_Interpolate,	u8"篡改传送",		u8"自定义传送",	false),
+		NF(f_Speed,			u8"篡改速度",		u8"自定义传送",	10.0f),
 		dir(util::GetCurrentPath() /= "teleports"),
 		nextTime(0)
 	{
@@ -34,7 +34,7 @@ namespace cheat::feature
 
 	const FeatureGUIInfo& CustomTeleports::GetGUIInfo() const
 	{
-		static const FeatureGUIInfo info{ "Custom Teleports", "Teleport", true };
+		static const FeatureGUIInfo info{ u8"自定义传送", u8"传送", true };
 		return info;
 	}
 
@@ -64,7 +64,7 @@ namespace cheat::feature
 	void CustomTeleports::SerializeTeleport(Teleport t)
 	{
 		Teleports.push_back(t);
-		LOG_INFO("Teleport '%s' Loaded", t.name.c_str());
+		LOG_INFO(u8"传送 '%s' 加载", t.name.c_str());
 		CheckFolder();
 		std::ofstream ofs(dir / (t.name + ".json"));
 		nlohmann::json j;
@@ -75,11 +75,11 @@ namespace cheat::feature
 			j["description"] = t.description;
 			ofs << j;
 			ofs.close();
-			LOG_INFO("Teleport '%s' Serialized.", t.name.c_str());
+			LOG_INFO(u8"传送 '%s' 连续.", t.name.c_str());
 		} catch (std::exception e)
 		{
 			ofs.close();
-			LOG_ERROR("Failed to serialize teleport: %s: %s", t.name.c_str(), e.what());
+			LOG_ERROR(u8"连续传送失败: %s: %s", t.name.c_str(), e.what());
 		}
 	}
 
@@ -264,9 +264,9 @@ namespace cheat::feature
 		static std::string JSONBuffer_;
 		static std::string descriptionBuffer_;
 
-		ImGui::InputText("Name", &nameBuffer_);
-		ImGui::InputText("Description", &descriptionBuffer_);
-		if (ImGui::Button("Add Teleport"))
+		ImGui::InputText(u8"名称", &nameBuffer_);
+		ImGui::InputText(u8"描述", &descriptionBuffer_);
+		if (ImGui::Button(u8"添加传送点"))
 		{
 			selectedIndex = -1;
 			UpdateIndexName();
@@ -276,7 +276,7 @@ namespace cheat::feature
 		}
 		ImGui::SameLine();
 
-		if (ImGui::Button("Reload"))
+		if (ImGui::Button(u8"重载"))
 		{
 			selectedIndex = -1;
 			UpdateIndexName();
@@ -285,14 +285,14 @@ namespace cheat::feature
 		}
 
 		ImGui::SameLine();
-		if (ImGui::Button("Open Folder"))
+		if (ImGui::Button(u8"打开文件夹"))
 		{
 			CheckFolder();
 			ShellExecuteA(NULL, "open", dir.string().c_str(), NULL, NULL, SW_SHOW);
 		}
 
 		ImGui::SameLine();
-		if (ImGui::Button("Load from JSON"))
+		if (ImGui::Button(u8"从 JSON 加载"))
 		{
 			if (!JSONBuffer_.empty()) {
 				auto t = SerializeFromJson(JSONBuffer_, false);
@@ -305,26 +305,26 @@ namespace cheat::feature
 			}
 
 		}
-		ImGui::InputTextMultiline("JSON input", &JSONBuffer_, ImVec2(0, 50), ImGuiInputTextFlags_AllowTabInput);
+		ImGui::InputTextMultiline(u8"JSON输入", &JSONBuffer_, ImVec2(0, 50), ImGuiInputTextFlags_AllowTabInput);
 
-		ConfigWidget("Teleport Next", f_Next, true, "Press to teleport next of selected.");
-		ConfigWidget("Teleport Previous", f_Previous, true, "Press to teleport previous of selected.");
-		ConfigWidget("Enable", f_Enabled,
-					 "Enable teleport-through-list functionality.\n"
-					 "Usage:\n"
-					 "1. Put Checkmark to the teleports you want to teleport using hotkey\n"
-					 "2. Single click the teleport (with checkmark) to select where you want to start\n"
-					 "3. You can now press Next or Previous Hotkey to Teleport through the Checklist\n"
-					 "Initially it will teleport the player to the selection made\n"
-					 "Note: Double click or click the arrow to open teleport details");
-		ConfigWidget("Enable Interpolation", f_Interpolate, "Enable interpolation between teleports when using keybinds."); ImGui::SameLine(); ImGui::SetNextItemWidth(300.0f);
-		ConfigWidget("Interpolation Speed", f_Speed, 0.1f, 0.1f, 99.0f,
-					 "Interpolation speed.\n recommended setting below or equal to 0.1.");
-		ConfigWidget("Auto Teleport", f_Auto, "Enable automatic forward teleporation between teleports"); ImGui::SameLine(); ImGui::SetNextItemWidth(300.0f);
-		ConfigWidget("Delay Time (s)", f_DelayTime, 1, 0, 60, "Delay (in s) between teleport.\n"
-			"Note: This is not fully tested detection-wise.\nNot recommended with low values.");
+		ConfigWidget(u8"传送下一个", f_Next, true, u8"按下传送到下一个传送点.");
+		ConfigWidget(u8"传送上一个", f_Previous, true, u8"按下传送到上一个传送点.");
+		ConfigWidget(u8"开启", f_Enabled,
+					 u8"启用通过列表功能传送.\n"
+					 u8"用法:\n"
+					 u8"1. 使用热键在你想要传送的传送点上打勾\n"
+					 u8"2. 单击传送（带复选标记）以选择要开始的位置\n"
+					 u8"3. 您现在可以按“下一步”或“上一步”热键传送检查表\n"
+					 u8"最初，它会将玩家传送到所选位置\n"
+					 u8"注意: 双击或单击箭头以打开“传送详细信息”");
+		ConfigWidget(u8"启用插值", f_Interpolate, u8"使用键绑定时启用传送之间的插值."); ImGui::SameLine(); ImGui::SetNextItemWidth(300.0f);
+		ConfigWidget(u8"插补速度", f_Speed, 0.1f, 0.1f, 99.0f,
+					 u8"插补速度.\n 建议设置低于或等于0.1.");
+		ConfigWidget(u8"自动传送", f_Auto, u8"启用远程传送之间的自动正向传送"); ImGui::SameLine(); ImGui::SetNextItemWidth(300.0f);
+		ConfigWidget(u8"延迟时间 (秒)", f_DelayTime, 1, 0, 60, u8"传送之间的延迟 (秒).\n"
+			u8"注意: 这在检测方面没有完全测试.\n不建议使用低值.");
 
-		if (ImGui::Button("Delete Checked"))
+		if (ImGui::Button(u8"删除选中"))
 		{
 			if (!Teleports.empty())
 			{
@@ -347,10 +347,10 @@ namespace cheat::feature
 			} else {LOG_INFO("No teleports to delete");}
 		}
 		ImGui::SameLine();
-		HelpMarker("Warning: This will delete the file from the directory and\n \
-		remove the teleport from the list. It will be lost forever.");
+		HelpMarker(u8"警告: 这将从目录中删除文件，并\n \
+		从列表中删除传送。它将永远丢失.");
 
-		if (ImGui::TreeNode("Teleports"))
+		if (ImGui::TreeNode(u8"传送"))
 		{
 			std::sort(Teleports.begin(), Teleports.end(), [](const auto &a, const auto &b)
 					  { return StrCmpLogicalW(std::wstring(a.name.begin(), a.name.end()).c_str(), std::wstring(b.name.begin(), b.name.end()).c_str()) < 0; });
@@ -379,7 +379,7 @@ namespace cheat::feature
 				}
 			}
 			ImGui::SameLine();
-			ImGui::InputText("Search", &searchBuffer_);
+			ImGui::InputText(u8"搜索", &searchBuffer_);
 			unsigned int index = 0;
 			searchIndices.clear();
 
@@ -387,11 +387,11 @@ namespace cheat::feature
 			for (auto &Teleport : Teleports)
 				if (Teleport.name.length() > maxNameLength)
 					maxNameLength = Teleport.name.length();
-			ImGui::BeginTable("Teleports", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_NoSavedSettings);
+			ImGui::BeginTable(u8"传送", 4, ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_NoSavedSettings);
 			ImGui::TableSetupColumn("#", ImGuiTableColumnFlags_WidthFixed, 20);
-			ImGui::TableSetupColumn("Commands", ImGuiTableColumnFlags_WidthFixed, 130);
-			ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthFixed, maxNameLength * 8 + 10);
-			ImGui::TableSetupColumn("Position");
+			ImGui::TableSetupColumn(u8"命令", ImGuiTableColumnFlags_WidthFixed, 130);
+			ImGui::TableSetupColumn(u8"名称", ImGuiTableColumnFlags_WidthFixed, maxNameLength * 8 + 10);
+			ImGui::TableSetupColumn(u8"位置");
 			ImGui::TableHeadersRow();
 
 			for (const auto &[name, position, description] : Teleports)
@@ -425,19 +425,19 @@ namespace cheat::feature
 					}
 
 					ImGui::SameLine();
-					if (ImGui::Button(("TP##Button" + stringIndex).c_str()))
+					if (ImGui::Button((u8"传送##Button" + stringIndex).c_str()))
 					{
 						TeleportTo(position, false);
 					}
 
 					ImGui::SameLine();
-					if (ImGui::Button(("Lerp##Button" + stringIndex).c_str()))
+					if (ImGui::Button((u8"Lerp##Button" + stringIndex).c_str()))
 					{
 						TeleportTo(position, true);
 					}
 					ImGui::SameLine();
 
-					if (ImGui::Button(("Select##Button" + stringIndex).c_str()))
+					if (ImGui::Button((u8"选择##Button" + stringIndex).c_str()))
 					{
 						auto isChecked = checkedIndices.find(index) != checkedIndices.end();
 						if (isChecked) {
@@ -468,7 +468,7 @@ namespace cheat::feature
 		}
 
 		if (selectedIndex != -1)
-			ImGui::Text("Selected: [%d] %s", selectedIndex, Teleports[selectedIndex].name.c_str());
+			ImGui::Text(u8"选择: [%d] %s", selectedIndex, Teleports[selectedIndex].name.c_str());
 	}
 
 	bool CustomTeleports::NeedStatusDraw() const
@@ -478,7 +478,7 @@ namespace cheat::feature
 
 	void CustomTeleports::DrawStatus()
 	{
-		ImGui::Text("Custom Teleport\n[%s|%s]", f_Auto ? "Auto" : "Manual", selectedIndexName);
+		ImGui::Text(u8"自定义传送\n[%s|%s]", f_Auto ? u8"自动" : u8"手动", selectedIndexName);
 	}
 
 	CustomTeleports &CustomTeleports::GetInstance()

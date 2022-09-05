@@ -10,10 +10,10 @@
 namespace cheat::feature
 {
     AutoFish::AutoFish() : Feature(),
-        NFEX(f_Enabled, "Auto Fish", "m_AutoFish", "AutoFish", false, false),
-        NF(f_DelayBeforeCatch, "Delay before catch", "AutoFish", 2000),
-        NF(f_AutoRecastRod, "Recast rod", "AutoFish", true),
-        NF(f_DelayBeforeRecast, "Delay before recast", "AutoFish", 500)
+        NFEX(f_Enabled, u8"自动钓鱼", "m_AutoFish", u8"自动钓鱼", false, false),
+        NF(f_DelayBeforeCatch, u8"捕获前延迟", u8"自动钓鱼", 2000),
+        NF(f_AutoRecastRod, u8"重新抛竿", u8"自动钓鱼", true),
+        NF(f_DelayBeforeRecast, u8"重新抛竿延迟", u8"自动钓鱼", 500)
     {
         events::GameUpdateEvent += MY_METHOD_HANDLER(AutoFish::OnGameUpdate);
 
@@ -27,19 +27,19 @@ namespace cheat::feature
 
     const FeatureGUIInfo& AutoFish::GetGUIInfo() const
     {
-        static const FeatureGUIInfo info{ "Fishing", "World", true };
+        static const FeatureGUIInfo info{ u8"自动钓鱼", u8"世界", true };
         return info;
     }
 
     void AutoFish::DrawMain()
     {
-        ConfigWidget("Enabled", f_Enabled, "Automatically catch fish.");
-        ConfigWidget("Catch Delay (ms)", f_DelayBeforeCatch, 100, 500, 4000, "Fish will be caught after this delay (in ms).");
+        ConfigWidget(u8"开启", f_Enabled, u8"自动钓鱼.");
+        ConfigWidget(u8"上钩延迟 (毫秒)", f_DelayBeforeCatch, 100, 500, 4000, u8"延迟多久收杆 (毫秒).");
 
         ImGui::Spacing();
 
-        ConfigWidget(f_AutoRecastRod, "If enabled, rod will recasted. Without visualization.");
-        ConfigWidget("Recast Delay (ms)", f_DelayBeforeRecast, 10, 100, 4000, "Rod will be recast after this delay (in ms).");
+        ConfigWidget(f_AutoRecastRod, u8"如果开启, 会自动重新抛竿. 这个没有动画效果.");
+        ConfigWidget(u8"重新抛竿延迟 (毫秒)", f_DelayBeforeRecast, 10, 100, 4000, u8"钓上鱼后多久重新抛竿 (毫秒).");
     }
 
     bool AutoFish::NeedStatusDraw() const
@@ -49,7 +49,7 @@ namespace cheat::feature
 
     void AutoFish::DrawStatus()
     {
-        ImGui::Text("Auto Fish");
+        ImGui::Text(u8"自动钓鱼");
     }
 
     AutoFish& AutoFish::GetInstance()

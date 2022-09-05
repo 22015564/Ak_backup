@@ -22,7 +22,7 @@ namespace cheat
 	}
 
 	CheatManagerBase::CheatManagerBase():
-		NF(m_SelectedSection, "", "General", 0),
+		NF(m_SelectedSection, "", u8"总开关", 0),
 		m_IsBlockingInput(true),
 		m_IsPrevCursorActive(false)
 	{
@@ -47,7 +47,7 @@ namespace cheat
 
 		ImGui::SetNextWindowSize(ImVec2(600, 300), ImGuiCond_FirstUseEver);
 
-		if (!ImGui::Begin("Akebi-GC"))
+		if (!ImGui::Begin(u8"Akebi-GC汉化by苏苏  免费分享，交流群811979687"))
 		{
 			ImGui::End();
 			return;
@@ -55,7 +55,7 @@ namespace cheat
 
 		ImGui::BeginGroup();
 
-		if (ImGui::Checkbox("Block key/mouse", &m_IsBlockingInput))
+		if (ImGui::Checkbox(u8"屏蔽按键鼠标", &m_IsBlockingInput))
 		{
 			renderer::SetInputLock(this, m_IsBlockingInput);
 		}
@@ -77,9 +77,9 @@ namespace cheat
 				index++;
 			}
 
-			ImGui::TextColored(ImColor(255, 136, 0, 255), "Private ToF cheat:");
+			ImGui::TextColored(ImColor(255, 136, 0, 255), u8"点击加群:");
 			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, 0xC0D5C8FF);
-			TextURL("Acai", "http://acai-tof.shop", true, false);
+			TextURL("811979687", "https://jq.qq.com/?_wv=1027&k=LqaMWQ8r", true, false);
 			ImGui::PopStyleColor();
 
 			ImGui::EndListBox();
@@ -161,10 +161,10 @@ namespace cheat
 		if (isPopupOpen)
 			ImGui::BeginDisabled();
 
-		if (ImGui::SmallButton("Rnm"))
+		if (ImGui::SmallButton(u8"重命名"))
 			ImGui::OpenRenamePopup(profileName);
 		if (ImGui::IsItemHovered())
-			ImGui::SetTooltip("Rename");
+			ImGui::SetTooltip(u8"重命名");
 
 		if (isPopupOpen)
 			ImGui::EndDisabled();
@@ -177,17 +177,17 @@ namespace cheat
 
 		ImGui::SameLine();
 
-		if (ImGui::SmallButton("Del"))
+		if (ImGui::SmallButton(u8"删除"))
 			config::RemoveProfile(profileName);
 		if (ImGui::IsItemHovered())
-			ImGui::SetTooltip("Delete");
+			ImGui::SetTooltip(u8"删除");
 
 		ImGui::SameLine();
 
-		if (ImGui::SmallButton("Dupe"))
+		if (ImGui::SmallButton(u8"复制"))
 			config::DuplicateProfile(profileName);
 		if (ImGui::IsItemHovered())
-			ImGui::SetTooltip("Duplicate Profile");
+			ImGui::SetTooltip(u8"复制配置文件");
 	}
 
 	void CheatManagerBase::DrawProfileEntry(const std::string& profileName)
@@ -197,7 +197,7 @@ namespace cheat
 
 	void CheatManagerBase::DrawProfileTableHeader()
 	{
-		ImGui::TableSetupColumn("Name");
+		ImGui::TableSetupColumn(u8"名字");
 	}
 
 	int CheatManagerBase::GetProfileTableColumnCount()
@@ -245,7 +245,7 @@ namespace cheat
 		if (m_IsProfileConfigurationShowed)
 			ImGui::BeginDisabled();
 
-		bool buttonPressed = ImGui::Button("Configure...");
+		bool buttonPressed = ImGui::Button(u8"配置...");
 
 		if (m_IsProfileConfigurationShowed)
 			ImGui::EndDisabled();
@@ -260,7 +260,7 @@ namespace cheat
 
 		constexpr float width = 200.0f;
 		ImGui::SetNextItemWidth(width);
-		if (ImGui::BeginCombo("Profile", currentProfile.c_str()))
+		if (ImGui::BeginCombo(u8"Profile", currentProfile.c_str()))
 		{
 			for (auto& name : profiles)
 			{
@@ -289,13 +289,13 @@ namespace cheat
 		if (!settings.f_StatusMove)
 			flags |= ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove;
 
-		ImGui::Begin("Cheat status", nullptr, flags);
+		ImGui::Begin(u8"菜单状态", nullptr, flags);
 
 		static ImGuiTableFlags tabFlags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
 
 		if (ImGui::BeginTable("activesTable", 1, tabFlags))
 		{
-			ImGui::TableSetupColumn("Active features");
+			ImGui::TableSetupColumn(u8"已开启功能");
 			ImGui::TableHeadersRow();
 
 			int row = 0;
@@ -339,12 +339,12 @@ namespace cheat
 			return;
 
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.04f, 0.05f, 0.05f, 0.90f));
-		ImGui::Begin("Info window", nullptr, flags);
+		ImGui::Begin(u8"信息窗口", nullptr, flags);
 		ImGui::PopStyleColor();
 
 		if (!showAny)
 		{
-			ImGui::Text("Nothing here");
+			ImGui::Text(u8"什么都没");
 			ImGui::End();
 			return;
 		}
@@ -421,7 +421,7 @@ namespace cheat
 		if (m_IsProfileConfigurationShowed)
 		{
 			ImGui::SetNextWindowSize({ 0, ImGui::GetTextLineHeightWithSpacing() * 11 }, ImGuiCond_FirstUseEver);
-			if (ImGui::Begin("Config profile configuration", &m_IsProfileConfigurationShowed))
+			if (ImGui::Begin(u8"配置文件配置", &m_IsProfileConfigurationShowed))
 				DrawProfileConfiguration();
 
 			ImGui::End();
@@ -463,7 +463,7 @@ namespace cheat
 				toggle.enabled = !toggle.enabled;
 				field.FireChanged();
 
-				std::string title = fmt::format("{}: {}", field.friendName(), (toggle ? "Enabled" : "Disabled"));
+				std::string title = fmt::format("{}: {}", field.friendName(), (toggle ? u8"开启" : u8"关闭"));
 				ImGuiToast toast(ImGuiToastType_None, settings.f_NotificationsDelay);
 				toast.set_title(title.c_str());
 				ImGui::InsertNotification(toast);

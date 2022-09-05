@@ -19,31 +19,31 @@ namespace cheat::feature
 {
 
 	ESP::ESP() : Feature(),
-		NF(f_Enabled, "ESP", "ESP", false),
+		NF(f_Enabled, u8"绘制", "ESP", false),
 
-		NF(f_DrawBoxMode, "Draw Mode", "ESP", DrawMode::Box),
-		NF(f_DrawTracerMode, "Tracer Mode", "ESP", DrawTracerMode::Line),
-		NF(f_Fill, "Fill Box/Rectangle/Arrows", "ESP", false),
-		NF(f_FillTransparency, "Fill Transparency", "ESP", 0.5f),
+		NF(f_DrawBoxMode, u8"绘图模式", "ESP", DrawMode::Box),
+		NF(f_DrawTracerMode, u8"连线模式", "ESP", DrawTracerMode::Line),
+		NF(f_Fill, u8"填充框/矩形/箭头", "ESP", false),
+		NF(f_FillTransparency, u8"填充透明度", "ESP", 0.5f),
 
-		NF(f_ArrowRadius, "Arrow Radius", "ESP", 100.0f),
-		NF(f_OutlineThickness, "Outline Thickness", "ESP", 1.0f),
-		NF(f_TracerSize, "Tracer Size", "ESP", 1.0f),
-		NF(f_MiddleScreenTracer, "Middle Screen Tracer", "ESP", false),
-		NF(f_DrawDistance, "Draw Distance", "ESP", false),
-		NF(f_DrawName, "Draw Name", "ESP", false),
+		NF(f_ArrowRadius, u8"箭头半径", "ESP", 100.0f),
+		NF(f_OutlineThickness, u8"轮廓厚度", "ESP", 1.0f),
+		NF(f_TracerSize, u8"追踪箭头大小", "ESP", 1.0f),
+		NF(f_MiddleScreenTracer, u8"从屏幕中间追踪", "ESP", false),
+		NF(f_DrawDistance, u8"绘制距离", "ESP", false),
+		NF(f_DrawName, u8"绘制名称", "ESP", false),
 
-		NF(f_FontSize, "Font Size", "ESP", 12.0f),
-		NF(f_FontOutline, "Font outline", "ESP", true),
-		NF(f_FontOutlineSize, "Font outline size", "ESP", 1.0f),
+		NF(f_FontSize, u8"字体大小", "ESP", 12.0f),
+		NF(f_FontOutline, u8"字体轮廓", "ESP", true),
+		NF(f_FontOutlineSize, u8"字体轮廓大小", "ESP", 1.0f),
 
-		NF(f_GlobalFontColor, "Font Color", "ESP", ImColor(255, 255, 255)),
-		NF(f_GlobalBoxColor, "Box Color", "ESP", ImColor(255, 255, 255)),
-		NF(f_GlobalLineColor, "Tracer Color", "ESP", ImColor(255, 255, 255)),
-		NF(f_GlobalRectColor, "Rect Color", "ESP", ImColor(255, 255, 255)),
+		NF(f_GlobalFontColor, u8"字体颜色", "ESP", ImColor(255, 255, 255)),
+		NF(f_GlobalBoxColor, u8"方框颜色", "ESP", ImColor(255, 255, 255)),
+		NF(f_GlobalLineColor, u8"追踪线颜色", "ESP", ImColor(255, 255, 255)),
+		NF(f_GlobalRectColor, u8"矩形颜色", "ESP", ImColor(255, 255, 255)),
 
-		NF(f_MinSize, "Min. Entity Size", "ESP", 0.5f),
-		NF(f_Range, "Range", "ESP", 100.0f),
+		NF(f_MinSize, u8"最小实体大小", "ESP", 0.5f),
+		NF(f_Range, u8"范围", "ESP", 100.0f),
 		m_Search({})
 	{
 		InstallFilters();
@@ -56,43 +56,43 @@ namespace cheat::feature
 
 	const FeatureGUIInfo& ESP::GetGUIInfo() const
 	{
-		static const FeatureGUIInfo info{ "", "ESP", false };
+		static const FeatureGUIInfo info{ "", u8"方框绘制", false };
 		return info;
 	}
 
 	void ESP::DrawMain()
 	{
-		if (ImGui::BeginGroupPanel("General", true))
+		if (ImGui::BeginGroupPanel(u8"绘制", true))
 		{
-			ConfigWidget("ESP Enabled", f_Enabled, "Show filtered object through obstacles.");
-			ConfigWidget("Range (m)", f_Range, 1.0f, 1.0f, 200.0f);
+			ConfigWidget(u8"开启绘制", f_Enabled, "通过绘制显示勾选的物品.");
+			ConfigWidget(u8"范围 (米)", f_Range, 1.0f, 1.0f, 200.0f);
 
-			ConfigWidget(f_DrawBoxMode, "Select the mode of box drawing.");
-			ConfigWidget(f_DrawTracerMode, "Select the mode of tracer drawing.");
+			ConfigWidget(f_DrawBoxMode, u8"选择框体绘制模式.");
+			ConfigWidget(f_DrawTracerMode, u8"选择跟踪器绘制模式.");
 
 			ConfigWidget(f_Fill);
-			ConfigWidget(f_FillTransparency, 0.01f, 0.0f, 1.0f, "Transparency of filled part.");
-			ConfigWidget(f_MiddleScreenTracer, "Draw tracer from middle part of the screen.");
+			ConfigWidget(f_FillTransparency, 0.01f, 0.0f, 1.0f, u8"填充部分的透明度.");
+			ConfigWidget(f_MiddleScreenTracer, u8"从屏幕中间绘制跟踪器.");
 
 			if (f_DrawTracerMode.value() == DrawTracerMode::OffscreenArrows)
 			{
-				if (ImGui::BeginGroupPanel("Arrow tracer options", true))
+				if (ImGui::BeginGroupPanel(u8"箭头跟踪选项", true))
 				{
-					ConfigWidget(f_TracerSize, 0.005f, 0.1f, 10.0f, "Size of tracer.");
-					ConfigWidget(f_ArrowRadius, 0.5f, 50.0f, 300.0f, "Radius of arrow.");
-					ConfigWidget(f_OutlineThickness, 0.005f, 0.0f, 10.0f, "Outline thickness of arrow.");
+					ConfigWidget(f_TracerSize, 0.005f, 0.1f, 10.0f, u8"箭头尺寸.");
+					ConfigWidget(f_ArrowRadius, 0.5f, 50.0f, 300.0f, u8"箭头半径.");
+					ConfigWidget(f_OutlineThickness, 0.005f, 0.0f, 10.0f, u8"箭头的轮廓厚度.");
 				}
 				ImGui::EndGroupPanel();
 			}
 
 			ImGui::Spacing();
-			ConfigWidget(f_DrawName, "Draw name of object.");
-			ConfigWidget(f_DrawDistance, "Draw distance of object.");
+			ConfigWidget(f_DrawName, u8"绘制对象的名称.");
+			ConfigWidget(f_DrawDistance, u8"绘制对象的距离.");
 
 			ImGui::Spacing();
-			ConfigWidget(f_FontSize, 1, 1, 100, "Font size of name or distance.");
-			ConfigWidget("## Font outline enabled", f_FontOutline); ImGui::SameLine();
-			ConfigWidget("Font outline", f_FontOutlineSize, 0.001f, 0.0f, 10.0f);
+			ConfigWidget(f_FontSize, 1, 1, 100, u8"名称或距离的字体大小.");
+			ConfigWidget(u8"## 启用字体轮廓", f_FontOutline); ImGui::SameLine();
+			ConfigWidget(u8"字体轮廓", f_FontOutlineSize, 0.001f, 0.0f, 10.0f);
 
 			ImGui::Spacing();
 			if (ImGui::BeginGroupPanel("Global colors", true))
@@ -100,20 +100,20 @@ namespace cheat::feature
 				if (ConfigWidget(f_GlobalFontColor, "Color of line, name, or distance text font."))
 					m_FontContrastColor = ImGui::CalcContrastColor(f_GlobalFontColor);
 
-				ConfigWidget(f_GlobalBoxColor, "Color of box font.");
-				ConfigWidget(f_GlobalLineColor, "Color of line font.");
-				ConfigWidget(f_GlobalRectColor, "Color of rectangle font.");
+				ConfigWidget(f_GlobalBoxColor, u8"方框的颜色 font.");
+				ConfigWidget(f_GlobalLineColor, u8"线条字体的颜色.");
+				ConfigWidget(f_GlobalRectColor, u8"矩形字体的颜色.");
 			}
 			ImGui::EndGroupPanel();
 
-			ConfigWidget(f_MinSize, 0.05f, 0.1f, 200.0f, "Minimum entity size as measured in-world.\n" \
-				"Some entities have either extremely small or no bounds at all.\n" \
-				"This parameter helps filter out entities that don't meet this condition.");
+			ConfigWidget(f_MinSize, 0.05f, 0.1f, 200.0f, u8"测量的最小实体大小.\n" \
+				u8"有些实体要么非常小，要么根本没有边界.\n" \
+				u8"此参数有助于筛选出不符合此条件的实体.");
 		}
 		ImGui::EndGroupPanel();
 
-		ImGui::Text("How to use item filters:\n\tLMB - Toggle visibility\n\tRMB - Open color picker");
-		ImGui::InputText("Search Filters", &m_Search);
+		ImGui::Text(u8"如何使用项目筛选器:\n\t左键 - 切换可见性\n\t右键 - 打开颜色选择器");
+		ImGui::InputText(u8"搜索过滤器", &m_Search);
 
 		for (auto& [section, filters] : m_Sections)
 		{
@@ -130,13 +130,13 @@ namespace cheat::feature
 
 	void ESP::DrawStatus()
 	{
-		ImGui::Text("ESP [%.01fm|%s|%s%s%s%s]",
+		ImGui::Text(u8"绘制 [%.01fm|%s|%s%s%s%s]",
 			f_Range.value(),
-			f_DrawBoxMode.value() == DrawMode::Box ? "Box" : f_DrawBoxMode.value() == DrawMode::Rectangle ? "Rect" : "None",
-			f_Fill ? "F" : "",
-			f_DrawTracerMode.value() == DrawTracerMode::Line ? "L" : f_DrawTracerMode.value() == DrawTracerMode::OffscreenArrows ? "A" : "",
-			f_DrawName ? "N" : "",
-			f_DrawDistance ? "D" : ""
+			f_DrawBoxMode.value() == DrawMode::Box ? u8"方框" : f_DrawBoxMode.value() == DrawMode::Rectangle ? u8"矩形" : u8"无",
+			f_Fill ? u8"填充" : "",
+			f_DrawTracerMode.value() == DrawTracerMode::Line ? u8"线" : f_DrawTracerMode.value() == DrawTracerMode::OffscreenArrows ? u8"箭" : "",
+			f_DrawName ? u8"名" : "",
+			f_DrawDistance ? u8"距" : ""
 		);
 	}
 
